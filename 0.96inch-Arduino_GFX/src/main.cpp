@@ -17,8 +17,8 @@
 #define TFT_CS    10   // CS (片选，引脚8)
 #define TFT_RST   42   // RESET (复位，引脚3)
 #define TFT_DC    2    // DC/RS/A0 (数据/命令选择，引脚4) - **必须连接！**
-#define TFT_MOSI  11   // SDA/MOSI (SPI数据输出，引脚5)
-#define TFT_SCLK  12   // SCL/SCLK (SPI时钟，引脚6)
+#define TFT_MOSI  11   // SDA/MOSI (SPI数据输出，引脚5) - VSPI硬件SPI引脚
+#define TFT_SCLK  12   // SCL/SCLK (SPI时钟，引脚6) - VSPI硬件SPI引脚
 #define TFT_BACKLIGHT 41  // LEDA/BLK (背光控制，引脚1)
 
 // 引脚连接说明：
@@ -32,13 +32,13 @@
 // - LEDA/BLK (引脚1) → GPIO 41 (背光控制)
 
 // ==================== LCD 对象 ====================
-// 使用软件SPI（指定MOSI和SCLK引脚）
+// 使用硬件SPI（VSPI：MOSI=GPIO11, SCLK=GPIO12）
 // ST7735S 初始化参数：160x80
 // 偏移量说明：
 // - col offset: 列偏移（左右移动），通常 26-28
 // - row offset: 行偏移（上下移动），通常 1-3
 // - offset 1 用于 rotation 0/2，offset 2 用于 rotation 1/3
-Arduino_DataBus *bus = new Arduino_SWSPI(TFT_DC, TFT_CS, TFT_SCLK, TFT_MOSI, -1);
+Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, TFT_SCLK, TFT_MOSI, 1 /* VSPI */, true /* use_psram */);
 Arduino_ST7735 *gfx = new Arduino_ST7735(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 80 /* width */, 160 /* height */, 24 /* col offset 1 */, 0 /* row offset 1 */, 24 /* col offset 2 */, 0 /* row offset 2 */);
 
 // ==================== 测试函数 ====================

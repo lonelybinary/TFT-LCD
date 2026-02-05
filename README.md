@@ -19,14 +19,16 @@ ESP32-S3 各尺寸 TFT-LCD 屏幕驱动示例代码（使用 Arduino GFX 官方�
 
 ## 引脚定义
 
-所有项目使用统一的引脚定义：
+所有项目使用统一的引脚定义，**使用硬件 SPI (VSPI)**：
 
 - CS: GPIO 10
 - RST: GPIO 42
 - DC: GPIO 2
-- MOSI: GPIO 11
-- SCLK: GPIO 12
+- MOSI: GPIO 11 (VSPI 硬件 SPI)
+- SCLK: GPIO 12 (VSPI 硬件 SPI)
 - BACKLIGHT: GPIO 41
+
+**注意：** 本项目使用硬件 SPI，速度更快、性能更稳定。MOSI 和 SCLK 必须连接到 ESP32-S3 的 VSPI 硬件 SPI 引脚。
 
 ## 使用方法
 
