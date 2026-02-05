@@ -1,0 +1,44 @@
+# PlatformIO 编译文件
+.pio/
+.vscode/
+.idea/
+
+# Python 缓存
+*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 操作系统文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# 临时文件
+*.tmp
+*.bak
+*.swp
+*~
+.*.sw?
+
+# 编译输出
+*.elf
+*.bin
+*.hex
+*.map
+
+# 日志文件
+*.log
+
+# 环境变量文件
+.env
+.env.local
+
+# 其他
+*.zip
+*.tar.gz
