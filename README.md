@@ -1,6 +1,8 @@
 # TFT-LCD
 
-ESP32-S3 各尺寸 TFT-LCD 屏幕驱动示例代码（使用 Arduino GFX 官方库）
+ESP32-S3 各尺寸 TFT-LCD 屏幕驱动示例代码（Arduino 版本）
+
+使用 **Arduino GFX 官方库** 和 **Arduino 框架**开发
 
 ## 支持的屏幕尺寸
 
@@ -30,6 +32,12 @@ ESP32-S3 各尺寸 TFT-LCD 屏幕驱动示例代码（使用 Arduino GFX 官方�
 
 **注意：** 本项目使用硬件 SPI，速度更快、性能更稳定。MOSI 和 SCLK 必须连接到 ESP32-S3 的 VSPI 硬件 SPI 引脚。
 
+## 开发环境
+
+- **框架**: Arduino Framework
+- **开发工具**: PlatformIO
+- **库依赖**: Arduino GFX Library (moononournation/GFX Library for Arduino@1.3.9)
+
 ## 使用方法
 
 1. 安装 PlatformIO IDE 或 VS Code + PlatformIO 插件
@@ -37,9 +45,12 @@ ESP32-S3 各尺寸 TFT-LCD 屏幕驱动示例代码（使用 Arduino GFX 官方�
 3. 连接硬件并配置串口
 4. 编译并上传到 ESP32-S3
 
-## 库依赖
+## 代码说明
 
-- Arduino GFX Library (moononournation/GFX Library for Arduino@1.3.9)
+本项目使用 **Arduino 框架**开发，所有代码基于 Arduino API 编写：
+- 使用 `Arduino.h` 头文件
+- 使用标准的 `setup()` 和 `loop()` 函数结构
+- 使用 Arduino GFX 库进行屏幕驱动
 
 ## 项目结构
 
