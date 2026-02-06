@@ -4,7 +4,7 @@ ESP32-S3 Multi-size TFT-LCD Display Driver Example Code (Using Arduino GFX Offic
 
 ## Supported Display Sizes
 
-- 0.96 inch (160x80) - ST7735S
+- 0.96 inch (80x160) - ST7735S
 - 1.8 inch (128x160) - ST7735S
 - 2.0 inch (240x320) - ST7789
 - 2.4 inch (240x320) - ST7789
@@ -53,10 +53,20 @@ All projects use unified pin definitions with **Hardware SPI (VSPI)**:
 
 ## Project Structure
 
-Each display size folder contains:
-- `README.md` / `README_CN.md` - Display specifications (English/Chinese)
-- `code/` - Arduino IDE version
-  - `{size}_Test/{size}_Test.ino` / `{size}_Test_CN.txt` - Arduino IDE main program (English/Chinese)
+```
+LCD-TFT/
+├── {size}inch/              # Display size folders (0.96, 1.8, 2.0, 2.4, 2.8, 3.5)
+│   ├── README.md            # Display specifications
+│   ├── ADAPTATION_GUIDE.md  # Adaptation guide (0.96-2.8 inch only, for adapting 3.5-inch tutorial code)
+│   └── code/
+│       └── {size}_Test/
+│           └── {size}_Test.ino  # Arduino IDE test program
+└── tutorials/
+    └── 3.5inch/             # 3.5-inch tutorial lessons (11 lessons)
+        ├── Lesson01_HelloWorld/
+        ├── Lesson02_Colors/
+        └── ...
+```
 
 ## License
 
