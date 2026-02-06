@@ -42,3 +42,6 @@ desktop.ini
 # 其他
 *.zip
 *.tar.gz
+
+# 中文版本文件（_CN后缀）
+*_CN.*
