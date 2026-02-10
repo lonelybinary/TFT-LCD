@@ -11,10 +11,9 @@ Learn how to display text on a 3.5-inch TFT-LCD screen, the first step in using 
 Before displaying any content, you need to initialize the display:
 
 ```cpp
-// Initialize backlight (3.5-inch display uses PWM control)
-ledcSetup(0, 5000, 8);  // Channel 0, 5kHz frequency, 8-bit resolution (0-255)
-ledcAttachPin(TFT_BACKLIGHT, 0);  // Attach backlight pin to PWM channel 0
-ledcWrite(0, 255);  // Set to maximum brightness (255 = 100% brightness)
+// Initialize backlight (On/Off only)
+pinMode(TFT_BACKLIGHT, OUTPUT);
+digitalWrite(TFT_BACKLIGHT, HIGH);  // ON
 
 // Reset display
 pinMode(TFT_RST, OUTPUT);
@@ -31,10 +30,8 @@ if (!gfx->begin()) {
 ```
 
 **Backlight Control Notes**:
-- 3.5-inch display uses **PWM control** for backlight (different from 0.96-inch Active Low)
-- Use `ledcSetup()` to configure PWM channel
-- Use `ledcAttachPin()` to attach pin to PWM channel
-- Use `ledcWrite()` to set brightness (0-255)
+- 3.5-inch: On/Off only, `digitalWrite(TFT_BACKLIGHT, HIGH)`=ON (0.96-inch: LOW=ON)
+- Use `pinMode(TFT_BACKLIGHT, OUTPUT)` and `digitalWrite()`, no brightness level
 
 ### 2. Set Text Color
 
@@ -137,16 +134,16 @@ After uploading the code, the display should show:
    gfx->println("Line 2");
    ```
 
-5. **Adjust Backlight Brightness**: Try different backlight brightness levels
+5. **Backlight On/Off**: Turn backlight off when not needed to save power
    ```cpp
-   ledcWrite(0, 128);  // 50% brightness
-   ledcWrite(0, 64);   // 25% brightness
+   digitalWrite(TFT_BACKLIGHT, LOW);   // OFF
+   digitalWrite(TFT_BACKLIGHT, HIGH);  // ON
    ```
 
 ## Frequently Asked Questions
 
 **Q: Display shows nothing?**
-- Check if backlight PWM configuration is correct
+- Check if backlight pinMode and digitalWrite are correct
 - Check if hardware connections are correct
 - Check serial output for error messages
 
@@ -159,8 +156,7 @@ After uploading the code, the display should show:
 - Check if text color is set before displaying
 
 **Q: Backlight is not on?**
-- Check if PWM configuration is correct
-- Confirm `ledcWrite(0, 255)` has been executed
+- Check if `digitalWrite(TFT_BACKLIGHT, HIGH)` has been executed (0.96-inch: use LOW)
 - Check if GPIO 41 connection is correct
 
 ## Next Step

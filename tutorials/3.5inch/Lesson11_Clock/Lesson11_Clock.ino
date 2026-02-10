@@ -2,14 +2,14 @@
  * Lesson 11: Clock Display
  * 3.5 inch TFT-LCD Display Tutorial
  * 
- * 课程目标：学习创建时钟显示界面
- * 
- * 知识点：
- * - 模拟时钟绘制
- * - 时钟刻度绘制
- * - 时针和分针绘制
- * - 数字时间显示
- * - 居中布局
+ * Course objectives: Learn to create a clock display interface
+ *
+ * Key concepts:
+ * - Analog clock drawing
+ * - Clock tick marks
+ * - Hour and minute hands
+ * - Digital time display
+ * - Centered layout
  * 
  * Library Dependencies:
  * - Arduino GFX Library (moononournation/GFX Library for Arduino@1.6.4)
@@ -27,15 +27,15 @@
 #define TFT_BACKLIGHT 41
 
 // ==================== LCD Object ====================
-// 注意：如需适配其他屏幕，请查看对应屏幕的测试程序
-// 例如：0.96寸请查看 0.96inch/code/0.96inch_Test/0.96inch_Test.ino
-// 详细适配指南请参考各屏幕文件夹下的ADAPTATION_GUIDE.md文件
+// Note: For other screen sizes, see the test program for each size
+// e.g. 0.96 inch: 0.96inch/code/0.96inch_Test/0.96inch_Test.ino
+// See ADAPTATION_GUIDE.md in each screen folder for adaptation details
 Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, TFT_SCLK, TFT_MOSI, GFX_NOT_DEFINED, 1, true);
 Arduino_ST7796 *gfx = new Arduino_ST7796(bus, TFT_RST, 0, true /* IPS */, 320, 480, 0, 0, 0, 0);
 
 // ==================== Helper Functions ====================
 
-// 居中显示文本
+// Draw centered text
 void drawCenteredText(const char* text, int y, uint16_t color, int size) {
   gfx->setTextSize(size);
   gfx->setTextColor(color);
@@ -53,12 +53,9 @@ void setup() {
   Serial.println("Lesson 11: Clock Display");
   Serial.println("Initializing LCD...");
   
-  // Initialize backlight (PWM)
-  // 注意：0.96寸使用Active Low控制（digitalWrite(TFT_BACKLIGHT, LOW)）
-  // 其他屏幕使用PWM控制，请查看对应屏幕的测试程序
-  ledcSetup(0, 5000, 8);
-  ledcAttachPin(TFT_BACKLIGHT, 0);
-  ledcWrite(0, 255);
+  // Initialize backlight (On/Off only)
+  pinMode(TFT_BACKLIGHT, OUTPUT);
+  digitalWrite(TFT_BACKLIGHT, HIGH);  // ON
   
   // Reset display
   pinMode(TFT_RST, OUTPUT);
@@ -79,19 +76,19 @@ void setup() {
   
   // ==================== Lesson Content ====================
   
-  // 时钟界面
+  // Clock interface
   Serial.println("Displaying Clock Interface");
   gfx->fillScreen(BLACK);
   
-  // 时钟圆心位置（屏幕正中间：320/2=160, 480/2=240）
-  int centerX = 160;  // 屏幕宽度中心
-  int centerY = 240;  // 屏幕高度中心
-  int radius = 100;   // 时钟半径，确保不超出屏幕
+  // Clock center (screen center: 320/2=160, 480/2=240)
+  int centerX = 160;  // Screen width center
+  int centerY = 240;  // Screen height center
+  int radius = 100;   // Clock radius, keep within screen
   
-  // 外圈
+  // Outer circle
   gfx->drawCircle(centerX, centerY, radius, WHITE);
   
-  // 时钟刻度（12个刻度）
+  // Clock ticks (12 marks)
   for (int i = 0; i < 12; i++) {
     float angle = i * PI / 6 - PI / 2;
     int x1 = centerX + (radius - 5) * cos(angle);
@@ -101,16 +98,16 @@ void setup() {
     gfx->drawLine(x1, y1, x2, y2, WHITE);
   }
   
-  // 时针（指向3点）
+  // Hour hand (pointing to 3 o'clock)
   gfx->drawLine(centerX, centerY, centerX + 40, centerY, RED);
   
-  // 分针（指向12点）
+  // Minute hand (pointing to 12 o'clock)
   gfx->drawLine(centerX, centerY, centerX, centerY - 60, GREEN);
   
-  // 中心点
+  // Center dot
   gfx->fillCircle(centerX, centerY, 5, WHITE);
   
-  // 时间文本（显示在时钟下方）
+  // Time text (below clock)
   gfx->setTextColor(WHITE);
   gfx->setTextSize(3);
   drawCenteredText("12:00", 380, WHITE, 3);

@@ -12,7 +12,7 @@ This guide provides detailed instructions on how to adapt 3.5-inch tutorial code
 | **IPS Parameter** | `true` | IPS display |
 | **Column Offset** | 0, 0 | Usually no offset needed |
 | **Row Offset** | 0, 0 | Usually no offset needed |
-| **Backlight Control** | PWM Normal | `ledcWrite(0, 255)`=brightest |
+| **Backlight Control** | On/Off (Active High) | `digitalWrite(BLK, HIGH)`=ON |
 | **Color Mode** | RGB565 | 16-bit color depth |
 
 ## Key Differences
@@ -27,7 +27,7 @@ This guide provides detailed instructions on how to adapt 3.5-inch tutorial code
 - **2.0-inch**: ST7789 (`Arduino_ST7789` class)
 
 ### 3. Backlight Control
-- 2.0-inch is the same as 3.5-inch, using PWM normal control
+- 2.0-inch is the same as 3.5-inch, On/Off only
 
 ## Code Modification Steps
 
@@ -51,11 +51,10 @@ Arduino_ST7789 *gfx = new Arduino_ST7789(bus, TFT_RST, 0, true /* IPS */, 240, 3
 
 ### Step 2: Backlight Control (Same as 3.5-inch)
 
-**2.0-inch (PWM Normal Control)**:
+**2.0-inch (On/Off, Active High)**:
 ```cpp
-ledcSetup(0, 5000, 8);
-ledcAttachPin(TFT_BACKLIGHT, 0);
-ledcWrite(0, 255);  // 255 = 100% brightness (brightest)
+pinMode(TFT_BACKLIGHT, OUTPUT);
+digitalWrite(TFT_BACKLIGHT, HIGH);  // ON
 ```
 
 **Note**: 2.0-inch backlight control is exactly the same as 3.5-inch.
@@ -116,10 +115,9 @@ New Y coordinate = Original Y coordinate × (New height / Original height)
 // LCD object initialization
 Arduino_ST7796 *gfx = new Arduino_ST7796(bus, TFT_RST, 0, true, 320, 480, 0, 0, 0, 0);
 
-// Backlight control
-ledcSetup(0, 5000, 8);
-ledcAttachPin(TFT_BACKLIGHT, 0);
-ledcWrite(0, 255);
+// Backlight control (On/Off)
+pinMode(TFT_BACKLIGHT, OUTPUT);
+digitalWrite(TFT_BACKLIGHT, HIGH);
 
 // Display text
 gfx->setTextColor(WHITE);
@@ -133,10 +131,9 @@ gfx->println("Hello World");
 // LCD object initialization
 Arduino_ST7789 *gfx = new Arduino_ST7789(bus, TFT_RST, 0, true, 240, 320, 0, 0, 0, 0);
 
-// Backlight control (same as 3.5-inch)
-ledcSetup(0, 5000, 8);
-ledcAttachPin(TFT_BACKLIGHT, 0);
-ledcWrite(0, 255);
+// Backlight control (same as 3.5-inch, On/Off)
+pinMode(TFT_BACKLIGHT, OUTPUT);
+digitalWrite(TFT_BACKLIGHT, HIGH);
 
 // Display text (coordinates adjusted proportionally, text size can be reduced appropriately)
 gfx->setTextColor(WHITE);
@@ -320,12 +317,12 @@ After adaptation, check the following items:
 
 - [ ] LCD object initialization modified (`Arduino_ST7789`, resolution `240, 320`)
 - [ ] IPS parameter set to `true`
-- [ ] Backlight control uses PWM normal control (`ledcWrite(0, 255)`)
+- [ ] Backlight control uses On/Off (`digitalWrite(TFT_BACKLIGHT, HIGH)` = ON)
 - [ ] All coordinates converted proportionally (X×0.75, Y×0.667)
 - [ ] Text size adjusted (recommended size 1-3)
 - [ ] Graphics dimensions scaled down proportionally
 - [ ] Display shows correctly, no offset
-- [ ] Backlight brightness is normal
+- [ ] Backlight is ON
 
 ---
 

@@ -95,11 +95,9 @@ void setup() {
   Serial.println("Using Arduino GFX Official Library");
   Serial.println("========================================");
   
-  // Initialize backlight (PWM reversed control)
-  // Note: 0.96 inch display uses reversed PWM control (0 = ON, 255 = OFF)
-  ledcSetup(0, 5000, 8);  // Channel 0, 5kHz frequency, 8-bit resolution (0-255)
-  ledcAttachPin(TFT_BACKLIGHT, 0);  // Attach backlight pin to PWM channel 0
-  ledcWrite(0, 0);  // Set to maximum brightness (0 = 100% brightness, reversed)
+  // Initialize backlight (On/Off only, Active Low: LOW=ON)
+  pinMode(TFT_BACKLIGHT, OUTPUT);
+  digitalWrite(TFT_BACKLIGHT, LOW);   // ON (0.96 inch is Active Low)
   
   // Initialize LCD
   Serial.println("Initializing LCD...");

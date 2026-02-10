@@ -111,11 +111,9 @@ void setup() {
   Serial.println("Using Arduino GFX Official Library");
   Serial.println("========================================");
   
-  // Initialize backlight (PWM dimming, set to maximum brightness)
-  // Note: For ESP32 Arduino framework 2.0.17, use ledcSetup + ledcAttachPin
-  ledcSetup(0, 5000, 8);  // Channel 0, 5kHz frequency, 8-bit resolution (0-255)
-  ledcAttachPin(TFT_BACKLIGHT, 0);  // Attach backlight pin to PWM channel 0
-  ledcWrite(0, 255);  // Set to maximum brightness (255 = 100% brightness)
+  // Initialize backlight (On/Off only)
+  pinMode(TFT_BACKLIGHT, OUTPUT);
+  digitalWrite(TFT_BACKLIGHT, HIGH);  // ON
   
   // Initialize LCD
   Serial.println("Initializing LCD...");

@@ -2,12 +2,12 @@
  * Lesson 04: Text Style
  * 3.5 inch TFT-LCD Display Tutorial
  * 
- * 课程目标：学习文本样式设置，包括前景色和背景色
- * 
- * 知识点：
- * - 文本前景色
- * - 文本背景色
- * - 颜色组合效果
+ * Course objectives: Learn text style (foreground and background color)
+ *
+ * Key concepts:
+ * - Text foreground color
+ * - Text background color
+ * - Color combination effects
  * 
  * Library Dependencies:
  * - Arduino GFX Library (moononournation/GFX Library for Arduino@1.6.4)
@@ -24,9 +24,9 @@
 #define TFT_BACKLIGHT 41
 
 // ==================== LCD Object ====================
-// 注意：如需适配其他屏幕，请查看对应屏幕的测试程序
-// 例如：0.96寸请查看 0.96inch/code/0.96inch_Test/0.96inch_Test.ino
-// 详细适配指南请参考各屏幕文件夹下的ADAPTATION_GUIDE.md文件
+// Note: For other screen sizes, see the test program for each size
+// e.g. 0.96 inch: 0.96inch/code/0.96inch_Test/0.96inch_Test.ino
+// See ADAPTATION_GUIDE.md in each screen folder for adaptation details
 Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, TFT_SCLK, TFT_MOSI, GFX_NOT_DEFINED, 1, true);
 Arduino_ST7796 *gfx = new Arduino_ST7796(bus, TFT_RST, 0, true /* IPS */, 320, 480, 0, 0, 0, 0);
 
@@ -38,12 +38,9 @@ void setup() {
   Serial.println("Lesson 04: Text Style");
   Serial.println("Initializing LCD...");
   
-  // Initialize backlight (PWM)
-  // 注意：0.96寸使用Active Low控制（digitalWrite(TFT_BACKLIGHT, LOW)）
-  // 其他屏幕使用PWM控制，请查看对应屏幕的测试程序
-  ledcSetup(0, 5000, 8);
-  ledcAttachPin(TFT_BACKLIGHT, 0);
-  ledcWrite(0, 255);
+  // Initialize backlight (On/Off only)
+  pinMode(TFT_BACKLIGHT, OUTPUT);
+  digitalWrite(TFT_BACKLIGHT, HIGH);  // ON
   
   // Reset display
   pinMode(TFT_RST, OUTPUT);
@@ -64,7 +61,7 @@ void setup() {
   
   // ==================== Lesson Content ====================
   
-  // Part 1: 只设置前景色（文本颜色）
+  // Part 1: Foreground color only (text color)
   Serial.println("Displaying text with foreground color only...");
   gfx->fillScreen(BLACK);
   
@@ -92,41 +89,41 @@ void setup() {
   
   delay(3000);
   
-  // Part 2: 设置前景色和背景色
+  // Part 2: Foreground and background color
   Serial.println("Displaying text with foreground and background colors...");
   gfx->fillScreen(BLACK);
   
   gfx->setTextSize(2);
   
-  // 白色文字，红色背景
+  // White text, red background
   gfx->setTextColor(WHITE, RED);
   gfx->setCursor(50, 30);
   gfx->println("White on Red");
   
-  // 黑色文字，黄色背景
+  // Black text, yellow background
   gfx->setTextColor(BLACK, YELLOW);
   gfx->setCursor(50, 80);
   gfx->println("Black on Yellow");
   
-  // 白色文字，蓝色背景
+  // White text, blue background
   gfx->setTextColor(WHITE, BLUE);
   gfx->setCursor(50, 130);
   gfx->println("White on Blue");
   
-  // 红色文字，白色背景
+  // Red text, white background
   gfx->setTextColor(RED, WHITE);
   gfx->setCursor(50, 180);
   gfx->println("Red on White");
   
   delay(3000);
   
-  // Part 3: 不同颜色组合
+  // Part 3: Different color combinations
   Serial.println("Displaying different color combinations...");
   gfx->fillScreen(BLACK);
   
   gfx->setTextSize(2);
   
-  // 高对比度组合
+  // High contrast
   gfx->setTextColor(WHITE, BLACK);
   gfx->setCursor(50, 30);
   gfx->println("High Contrast");
@@ -135,7 +132,7 @@ void setup() {
   gfx->setCursor(50, 80);
   gfx->println("Inverted");
   
-  // 彩色组合
+  // Color combinations
   gfx->setTextColor(CYAN, MAGENTA);
   gfx->setCursor(50, 130);
   gfx->println("Cyan/Magenta");
@@ -146,24 +143,24 @@ void setup() {
   
   delay(3000);
   
-  // Part 4: 文本区域背景
+  // Part 4: Text area background
   Serial.println("Displaying text with background areas...");
   gfx->fillScreen(BLACK);
   
   gfx->setTextSize(2);
   
-  // 方法1：使用setTextColor设置背景
+  // Method 1: setTextColor for background
   gfx->setTextColor(WHITE, RED);
   gfx->setCursor(50, 30);
   gfx->println("Method 1");
   
-  // 方法2：先绘制背景矩形，再显示文本
+  // Method 2: Draw background rect first, then text
   gfx->fillRect(20, 100, 150, 30, GREEN);
   gfx->setTextColor(BLACK);
   gfx->setCursor(50, 110);
   gfx->println("Method 2");
   
-  // 方法3：使用不同背景色显示多行
+  // Method 3: Multiple lines with different background
   gfx->fillRect(20, 160, 200, 30, BLUE);
   gfx->setTextColor(WHITE);
   gfx->setCursor(50, 170);
@@ -171,31 +168,31 @@ void setup() {
   
   delay(3000);
   
-  // Part 5: 创建标签效果
+  // Part 5: Label effects
   Serial.println("Creating label effects...");
   gfx->fillScreen(BLACK);
   
   gfx->setTextSize(2);
   
-  // 标签1：成功标签（绿色背景）
+  // Label 1: Success (green background)
   gfx->fillRect(50, 50, 120, 35, GREEN);
   gfx->setTextColor(BLACK);
   gfx->setCursor(60, 60);
   gfx->println("SUCCESS");
   
-  // 标签2：警告标签（黄色背景）
+  // Label 2: Warning (yellow background)
   gfx->fillRect(50, 100, 120, 35, YELLOW);
   gfx->setTextColor(BLACK);
   gfx->setCursor(60, 110);
   gfx->println("WARNING");
   
-  // 标签3：错误标签（红色背景）
+  // Label 3: Error (red background)
   gfx->fillRect(50, 150, 120, 35, RED);
   gfx->setTextColor(WHITE);
   gfx->setCursor(60, 160);
   gfx->println("ERROR");
   
-  // 标签4：信息标签（蓝色背景）
+  // Label 4: Info (blue background)
   gfx->fillRect(50, 200, 120, 35, BLUE);
   gfx->setTextColor(WHITE);
   gfx->setCursor(60, 210);
@@ -203,19 +200,19 @@ void setup() {
   
   delay(3000);
   
-  // Part 6: 文本高亮效果
+  // Part 6: Text highlight effect
   Serial.println("Creating text highlight effects...");
   gfx->fillScreen(BLACK);
   
   gfx->setTextSize(2);
   
-  // 高亮文本行
+  // Highlighted line
   gfx->fillRect(0, 100, 320, 40, CYAN);
   gfx->setTextColor(BLACK);
   gfx->setCursor(50, 110);
   gfx->println("Highlighted Line");
   
-  // 正常文本
+  // Normal text
   gfx->setTextColor(WHITE);
   gfx->setCursor(50, 50);
   gfx->println("Normal Text");

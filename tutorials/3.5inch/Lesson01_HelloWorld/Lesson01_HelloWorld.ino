@@ -2,14 +2,14 @@
  * Lesson 01: Hello World
  * 3.5 inch TFT-LCD Display Tutorial
  * 
- * 课程目标：学习如何在屏幕上显示文本
- * 
- * 知识点：
- * - 屏幕初始化
- * - PWM背光控制
- * - 设置文本颜色
- * - 设置光标位置
- * - 显示文本
+ * Course objectives: Learn how to display text on screen
+ *
+ * Key concepts:
+ * - Display initialization
+ * - Backlight On/Off control
+ * - Set text color
+ * - Set cursor position
+ * - Display text
  * 
  * Library Dependencies:
  * - Arduino GFX Library (moononournation/GFX Library for Arduino@1.6.4)
@@ -28,13 +28,12 @@
 // ==================== LCD Object ====================
 // Using hardware SPI (VSPI: MOSI=GPIO11, SCLK=GPIO12)
 // ST7796 initialization parameters: 320x480
-// 注意：如需适配其他屏幕，请查看对应屏幕的详细适配指南
-// 各屏幕适配指南：
-// - 0.96寸: 0.96inch/ADAPTATION_GUIDE.md
-// - 1.8寸: 1.8inch/ADAPTATION_GUIDE.md
-// - 2.0寸: 2.0inch/ADAPTATION_GUIDE.md
-// - 2.4寸: 2.4inch/ADAPTATION_GUIDE.md
-// - 2.8寸: 2.8inch/ADAPTATION_GUIDE.md
+// Note: For other screen sizes, see the adaptation guide for each size:
+// - 0.96 inch: 0.96inch/ADAPTATION_GUIDE.md
+// - 1.8 inch: 1.8inch/ADAPTATION_GUIDE.md
+// - 2.0 inch: 2.0inch/ADAPTATION_GUIDE.md
+// - 2.4 inch: 2.4inch/ADAPTATION_GUIDE.md
+// - 2.8 inch: 2.8inch/ADAPTATION_GUIDE.md
 Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, TFT_SCLK, TFT_MOSI, GFX_NOT_DEFINED /* MISO (not used) */, 1 /* VSPI */, true /* use_psram */);
 Arduino_ST7796 *gfx = new Arduino_ST7796(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 320 /* width */, 480 /* height */, 0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 0 /* row offset 2 */);
 
@@ -46,13 +45,9 @@ void setup() {
   Serial.println("Lesson 01: Hello World");
   Serial.println("Initializing LCD...");
   
-  // Initialize backlight (PWM dimming, set to maximum brightness)
-  // Note: 3.5 inch display uses PWM control (different from 0.96 inch Active Low)
-  // 注意：0.96寸使用Active Low控制（digitalWrite(TFT_BACKLIGHT, LOW)）
-  // 其他屏幕使用PWM控制，请查看对应屏幕的测试程序
-  ledcSetup(0, 5000, 8);  // Channel 0, 5kHz frequency, 8-bit resolution (0-255)
-  ledcAttachPin(TFT_BACKLIGHT, 0);  // Attach backlight pin to PWM channel 0
-  ledcWrite(0, 255);  // Set to maximum brightness (255 = 100% brightness)
+  // Initialize backlight (On/Off only)
+  pinMode(TFT_BACKLIGHT, OUTPUT);
+  digitalWrite(TFT_BACKLIGHT, HIGH);  // ON
   
   // Reset display first
   pinMode(TFT_RST, OUTPUT);

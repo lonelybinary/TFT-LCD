@@ -23,7 +23,7 @@
 - **Display Orientation**: Supports 0°, 90°, 180°, 270° rotation
 - **Color Mode**: RGB565 (65,536 colors)
 - **Refresh Rate**: Supports high-speed refresh
-- **Backlight Control**: PWM control (Active High)
+- **Backlight Control**: On/Off only (Active High: HIGH=ON)
 
 ## Pin Definitions
 
@@ -31,7 +31,7 @@
 
 | Pin No. | Function | ESP32-S3 Connection | Description |
 |---------|----------|---------------------|-------------|
-| 1 | LEDA/BLK | GPIO 41 | Backlight control (PWM) |
+| 1 | LEDA/BLK | GPIO 41 | Backlight control (On/Off) |
 | 2 | GND | GND | Ground |
 | 3 | RESET | GPIO 42 | Reset signal |
 | 4 | DC/RS/A0 | GPIO 2 | Data/Command select (**Must connect**) |
@@ -124,7 +124,7 @@ If the display position is inaccurate, you can:
 - **ESP32 Arduino Framework**: 2.0.17 (Required for GFX Library 1.6.4 compatibility)
   - ⚠️ **Important**: Arduino IDE version must use ESP32 Arduino framework 2.0.17
   - ⚠️ **Warning**: **Do not use ESP32 framework 3.X.X** (has compatibility issues with GFX Library 1.6.4)
-  - ⚠️ **PWM API**: ESP32 2.0.17 uses `ledcSetup()` + `ledcAttachPin()`, not `ledcAttach()`
+  - 背光为 On/Off 控制（digitalWrite），不使用 PWM
 
 ## Display Features
 
@@ -136,7 +136,7 @@ The program displays:
 ## Frequently Asked Questions
 
 ### Q: Screen not lighting up?
-- **Check backlight connection**: Confirm GPIO 41 connection is correct, use PWM control
+- **Check backlight connection**: Confirm GPIO 41 connection is correct (On/Off: HIGH=ON)
 - **Check power supply**: Must use 3.3V, do not connect 5V
 - **Check code**: Confirm backlight control is set correctly
 
@@ -161,7 +161,7 @@ The program displays:
 ## Important Notes
 
 1. **Power Requirements**: Must use 3.3V, absolutely do not connect 5V, otherwise the display will be damaged
-2. **Backlight Control**: Use PWM to control backlight brightness
+2. **Backlight Control**: On/Off only (`digitalWrite(TFT_BACKLIGHT, HIGH)`=ON)
 3. **Hardware SPI**: MOSI and SCLK must be connected to VSPI hardware SPI pins (GPIO 11 and GPIO 12)
 4. **DC Pin**: DC/RS/A0 pin must be connected, otherwise the display will not work properly
 5. **Resolution**: Confirm resolution is set to 128x160
@@ -177,7 +177,7 @@ The program displays:
 | Operating Voltage | 3.3V |
 | SPI Speed | Hardware SPI (VSPI) |
 | Display Type | TFT-LCD |
-| Backlight | LED backlight (PWM control) |
+| Backlight | LED backlight (On/Off) |
 
 ## License
 

@@ -2,12 +2,12 @@
  * Lesson 06: Rotation
  * 3.5 inch TFT-LCD Display Tutorial
  * 
- * 课程目标：学习如何旋转屏幕显示方向
- * 
- * 知识点：
- * - setRotation() 函数
- * - 不同旋转角度的效果
- * - 旋转对坐标的影响
+ * Course objectives: Learn how to rotate screen orientation
+ *
+ * Key concepts:
+ * - setRotation() function
+ * - Effect of different rotation angles
+ * - How rotation affects coordinates
  * 
  * Library Dependencies:
  * - Arduino GFX Library (moononournation/GFX Library for Arduino@1.6.4)
@@ -24,9 +24,9 @@
 #define TFT_BACKLIGHT 41
 
 // ==================== LCD Object ====================
-// 注意：如需适配其他屏幕，请查看对应屏幕的测试程序
-// 例如：0.96寸请查看 0.96inch/code/0.96inch_Test/0.96inch_Test.ino
-// 详细适配指南请参考各屏幕文件夹下的ADAPTATION_GUIDE.md文件
+// Note: For other screen sizes, see the test program for each size
+// e.g. 0.96 inch: 0.96inch/code/0.96inch_Test/0.96inch_Test.ino
+// See ADAPTATION_GUIDE.md in each screen folder for adaptation details
 Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, TFT_SCLK, TFT_MOSI, GFX_NOT_DEFINED, 1, true);
 Arduino_ST7796 *gfx = new Arduino_ST7796(bus, TFT_RST, 0, true /* IPS */, 320, 480, 0, 0, 0, 0);
 
@@ -38,12 +38,9 @@ void setup() {
   Serial.println("Lesson 06: Rotation");
   Serial.println("Initializing LCD...");
   
-  // Initialize backlight (PWM)
-  // 注意：0.96寸使用Active Low控制（digitalWrite(TFT_BACKLIGHT, LOW)）
-  // 其他屏幕使用PWM控制，请查看对应屏幕的测试程序
-  ledcSetup(0, 5000, 8);
-  ledcAttachPin(TFT_BACKLIGHT, 0);
-  ledcWrite(0, 255);
+  // Initialize backlight (On/Off only)
+  pinMode(TFT_BACKLIGHT, OUTPUT);
+  digitalWrite(TFT_BACKLIGHT, HIGH);  // ON
   
   // Reset display
   pinMode(TFT_RST, OUTPUT);
@@ -62,24 +59,24 @@ void setup() {
   
   // ==================== Lesson Content ====================
   
-  // Part 1: 显示所有旋转角度
+  // Part 1: Show all rotation angles
   Serial.println("Displaying all rotation angles...");
   
   for (int rotation = 0; rotation < 4; rotation++) {
-    // 设置旋转角度
+    // Set rotation
     gfx->setRotation(rotation);
     
-    // 清屏
+    // Clear screen
     gfx->fillScreen(BLACK);
     
-    // 显示旋转角度信息
+    // Show rotation info
     gfx->setTextColor(WHITE);
     gfx->setTextSize(3);
     gfx->setCursor(50, 50);
     gfx->print("Rot: ");
     gfx->println(rotation);
     
-    // 显示当前屏幕尺寸
+    // Show current screen size
     gfx->setTextSize(2);
     gfx->setCursor(50, 120);
     gfx->print("W: ");
@@ -87,31 +84,31 @@ void setup() {
     gfx->print(" H: ");
     gfx->println(gfx->height());
     
-    // 绘制坐标轴
+    // Draw axes
     int centerX = gfx->width() / 2;
     int centerY = gfx->height() / 2;
     
-    // X轴（红色）
+    // X axis (red)
     gfx->drawLine(0, centerY, gfx->width(), centerY, RED);
     gfx->setTextColor(RED);
     gfx->setTextSize(2);
     gfx->setCursor(gfx->width() - 40, centerY - 30);
     gfx->print("X");
     
-    // Y轴（绿色）
+    // Y axis (green)
     gfx->drawLine(centerX, 0, centerX, gfx->height(), GREEN);
     gfx->setTextColor(GREEN);
     gfx->setCursor(centerX + 10, 20);
     gfx->print("Y");
     
-    // 原点标记
+    // Origin marker
     gfx->fillCircle(0, 0, 5, YELLOW);
     gfx->setTextColor(YELLOW);
     gfx->setTextSize(1);
     gfx->setCursor(10, 10);
     gfx->print("(0,0)");
     
-    // 在四个角显示标记
+    // Corner markers
     gfx->fillCircle(0, 0, 3, CYAN);
     gfx->fillCircle(gfx->width()-1, 0, 3, CYAN);
     gfx->fillCircle(0, gfx->height()-1, 3, CYAN);
@@ -120,26 +117,26 @@ void setup() {
     delay(3000);
   }
   
-  // Part 2: 在不同旋转角度显示相同内容
+  // Part 2: Same content at different rotations
   Serial.println("Displaying same content at different rotations...");
   
   for (int rotation = 0; rotation < 4; rotation++) {
     gfx->setRotation(rotation);
     gfx->fillScreen(BLACK);
     
-    // 显示文本
+    // Display text
     gfx->setTextColor(WHITE);
     gfx->setTextSize(4);
     
-    // 居中显示
-    int textWidth = 6 * 4 * 4;  // "TEST" 4个字符，size=4
+    // Center on screen
+    int textWidth = 6 * 4 * 4;  // "TEST" 4 chars, size=4
     int x = (gfx->width() - textWidth) / 2;
     int y = (gfx->height() - 32) / 2;
     
     gfx->setCursor(x, y);
     gfx->println("TEST");
     
-    // 显示旋转角度
+    // Show rotation
     gfx->setTextSize(2);
     gfx->setTextColor(CYAN);
     gfx->setCursor(20, 20);
@@ -149,7 +146,7 @@ void setup() {
     delay(3000);
   }
   
-  // Part 3: 旋转对图形的影响
+  // Part 3: Graphics at different rotations
   Serial.println("Showing graphics at different rotations...");
   
   for (int rotation = 0; rotation < 4; rotation++) {
@@ -159,16 +156,16 @@ void setup() {
     int centerX = gfx->width() / 2;
     int centerY = gfx->height() / 2;
     
-    // 绘制矩形
+    // Draw rectangle
     gfx->drawRect(centerX - 60, centerY - 40, 120, 80, RED);
     
-    // 绘制圆形
+    // Draw circle
     gfx->drawCircle(centerX, centerY, 50, GREEN);
     
-    // 绘制线条（指向右上角）
+    // Draw line (to top-right)
     gfx->drawLine(centerX, centerY, centerX + 60, centerY - 60, BLUE);
     
-    // 显示角度
+    // Show angle
     gfx->setTextColor(WHITE);
     gfx->setTextSize(2);
     gfx->setCursor(20, 20);
@@ -178,9 +175,9 @@ void setup() {
     delay(3000);
   }
   
-  // Part 4: 旋转角度说明
+  // Part 4: Rotation reference
   Serial.println("Rotation angle reference...");
-  gfx->setRotation(0);  // 恢复默认
+  gfx->setRotation(0);  // Restore default
   gfx->fillScreen(BLACK);
   
   gfx->setTextColor(WHITE);

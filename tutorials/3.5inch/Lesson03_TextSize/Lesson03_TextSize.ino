@@ -2,12 +2,12 @@
  * Lesson 03: Text Size
  * 3.5 inch TFT-LCD Display Tutorial
  * 
- * 课程目标：学习如何控制文本大小
- * 
- * 知识点：
- * - setTextSize() 函数
- * - 不同大小的效果
- * - 大小对位置的影响
+ * Course objectives: Learn how to control text size
+ *
+ * Key concepts:
+ * - setTextSize() function
+ * - Effect of different sizes
+ * - How size affects position
  * 
  * Library Dependencies:
  * - Arduino GFX Library (moononournation/GFX Library for Arduino@1.6.4)
@@ -24,9 +24,9 @@
 #define TFT_BACKLIGHT 41
 
 // ==================== LCD Object ====================
-// 注意：如需适配其他屏幕，请查看对应屏幕的测试程序
-// 例如：0.96寸请查看 0.96inch/code/0.96inch_Test/0.96inch_Test.ino
-// 详细适配指南请参考各屏幕文件夹下的ADAPTATION_GUIDE.md文件
+// Note: For other screen sizes, see the test program for each size
+// e.g. 0.96 inch: 0.96inch/code/0.96inch_Test/0.96inch_Test.ino
+// See ADAPTATION_GUIDE.md in each screen folder for adaptation details
 Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, TFT_SCLK, TFT_MOSI, GFX_NOT_DEFINED, 1, true);
 Arduino_ST7796 *gfx = new Arduino_ST7796(bus, TFT_RST, 0, true /* IPS */, 320, 480, 0, 0, 0, 0);
 
@@ -38,12 +38,9 @@ void setup() {
   Serial.println("Lesson 03: Text Size");
   Serial.println("Initializing LCD...");
   
-  // Initialize backlight (PWM)
-  // 注意：0.96寸使用Active Low控制（digitalWrite(TFT_BACKLIGHT, LOW)）
-  // 其他屏幕使用PWM控制，请查看对应屏幕的测试程序
-  ledcSetup(0, 5000, 8);
-  ledcAttachPin(TFT_BACKLIGHT, 0);
-  ledcWrite(0, 255);
+  // Initialize backlight (On/Off only)
+  pinMode(TFT_BACKLIGHT, OUTPUT);
+  digitalWrite(TFT_BACKLIGHT, HIGH);  // ON
   
   // Reset display
   pinMode(TFT_RST, OUTPUT);
@@ -64,13 +61,13 @@ void setup() {
   
   // ==================== Lesson Content ====================
   
-  // Part 1: 显示不同大小的文本
+  // Part 1: Display text in different sizes
   Serial.println("Displaying different text sizes...");
   gfx->fillScreen(BLACK);
   
   gfx->setTextColor(WHITE);
   
-  // Size 1 (默认大小)
+  // Size 1 (default)
   gfx->setTextSize(1);
   gfx->setCursor(20, 20);
   gfx->println("Size 1");
@@ -92,7 +89,7 @@ void setup() {
   
   delay(3000);
   
-  // Part 2: 大小对比
+  // Part 2: Size comparison
   Serial.println("Comparing text sizes...");
   gfx->fillScreen(BLACK);
   
@@ -104,16 +101,16 @@ void setup() {
     gfx->print("Size ");
     gfx->print(size);
     
-    // 显示相同文本，不同大小
+    // Same text, different size
     gfx->setTextColor(CYAN);
     gfx->print(" ABC");
     
-    y += size * 8 + 5;  // 根据大小调整Y位置
+    y += size * 8 + 5;  // Adjust Y by size
   }
   
   delay(3000);
   
-  // Part 3: 数字大小显示
+  // Part 3: Numbers in different sizes
   Serial.println("Displaying numbers in different sizes...");
   gfx->fillScreen(BLACK);
   
@@ -122,40 +119,40 @@ void setup() {
   gfx->setCursor(50, 20);
   gfx->println("Numbers:");
   
-  // 小数字
+  // Small numbers
   gfx->setTextSize(2);
   gfx->setCursor(50, 60);
   gfx->println("123");
   
-  // 中等数字
+  // Medium numbers
   gfx->setTextSize(3);
   gfx->setCursor(50, 120);
   gfx->println("456");
   
-  // 大数字
+  // Large numbers
   gfx->setTextSize(4);
   gfx->setCursor(50, 220);
   gfx->println("789");
   
   delay(3000);
   
-  // Part 4: 混合大小文本
+  // Part 4: Mixed size text
   Serial.println("Displaying mixed size text...");
   gfx->fillScreen(BLACK);
   
-  // 标题（大）
+  // Title (large)
   gfx->setTextSize(3);
   gfx->setTextColor(YELLOW);
   gfx->setCursor(80, 30);
   gfx->println("TITLE");
   
-  // 副标题（中）
+  // Subtitle (medium)
   gfx->setTextSize(2);
   gfx->setTextColor(CYAN);
   gfx->setCursor(50, 100);
   gfx->println("Subtitle");
   
-  // 正文（小）
+  // Body (small)
   gfx->setTextSize(1);
   gfx->setTextColor(WHITE);
   gfx->setCursor(20, 150);
@@ -167,7 +164,7 @@ void setup() {
   
   delay(3000);
   
-  // Part 5: 动态大小变化
+  // Part 5: Animate text size
   Serial.println("Animating text size...");
   gfx->fillScreen(BLACK);
   
@@ -176,8 +173,8 @@ void setup() {
     gfx->setTextSize(size);
     gfx->setTextColor(WHITE);
     
-    // 居中显示
-    int textWidth = 4 * size * 6;  // 估算宽度
+    // Center on screen
+    int textWidth = 4 * size * 6;  // Estimate width
     int x = (gfx->width() - textWidth) / 2;
     int y = (gfx->height() - size * 8) / 2;
     

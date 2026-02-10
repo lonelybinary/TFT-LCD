@@ -12,7 +12,7 @@ This guide provides detailed instructions on how to adapt 3.5-inch tutorial code
 | **IPS Parameter** | `true` | **Must be set to true for correct color display** |
 | **Column Offset** | 0, 0 | Usually no offset needed |
 | **Row Offset** | 0, 0 | Usually no offset needed |
-| **Backlight Control** | PWM Normal | `ledcWrite(0, 255)`=brightest |
+| **Backlight Control** | On/Off (Active High) | `digitalWrite(BLK, HIGH)`=ON |
 | **Color Mode** | RGB565/BGR565 | May require BGR conversion |
 
 ## Key Differences
@@ -52,14 +52,13 @@ Arduino_ST7735 *gfx = new Arduino_ST7735(bus, TFT_RST, 0, true /* IPS */, 128, 1
 
 ### Step 2: Backlight Control (Same as 3.5-inch)
 
-**1.8-inch (PWM Normal Control)**:
+**1.8-inch (On/Off, Active High)**:
 ```cpp
-ledcSetup(0, 5000, 8);
-ledcAttachPin(TFT_BACKLIGHT, 0);
-ledcWrite(0, 255);  // 255 = 100% brightness (brightest)
+pinMode(TFT_BACKLIGHT, OUTPUT);
+digitalWrite(TFT_BACKLIGHT, HIGH);  // ON
 ```
 
-**Note**: 1.8-inch backlight control is the same as 3.5-inch, using PWM normal control.
+**Note**: 1.8-inch backlight is the same as 3.5-inch, On/Off only.
 
 ### Step 3: BGR Color Conversion (Optional, Based on Actual Situation)
 
@@ -139,10 +138,9 @@ New Y coordinate = Original Y coordinate × (New height / Original height)
 // LCD object initialization
 Arduino_ST7796 *gfx = new Arduino_ST7796(bus, TFT_RST, 0, true, 320, 480, 0, 0, 0, 0);
 
-// Backlight control
-ledcSetup(0, 5000, 8);
-ledcAttachPin(TFT_BACKLIGHT, 0);
-ledcWrite(0, 255);
+// Backlight control (On/Off)
+pinMode(TFT_BACKLIGHT, OUTPUT);
+digitalWrite(TFT_BACKLIGHT, HIGH);
 
 // Display text
 gfx->setTextColor(WHITE);
@@ -156,10 +154,9 @@ gfx->println("Hello World");
 // LCD object initialization
 Arduino_ST7735 *gfx = new Arduino_ST7735(bus, TFT_RST, 0, true, 128, 160, 0, 0, 0, 0);
 
-// Backlight control (same as 3.5-inch)
-ledcSetup(0, 5000, 8);
-ledcAttachPin(TFT_BACKLIGHT, 0);
-ledcWrite(0, 255);
+// Backlight control (same as 3.5-inch, On/Off)
+pinMode(TFT_BACKLIGHT, OUTPUT);
+digitalWrite(TFT_BACKLIGHT, HIGH);
 
 // Display text (coordinates and font size both scaled down)
 gfx->setTextColor(WHITE);
@@ -343,13 +340,13 @@ After adaptation, check the following items:
 
 - [ ] LCD object initialization modified (`Arduino_ST7735`, resolution `128, 160`)
 - [ ] **IPS parameter set to `true` (Important!)****
-- [ ] Backlight control uses PWM normal control (`ledcWrite(0, 255)`)
+- [ ] Backlight control uses On/Off (`digitalWrite(TFT_BACKLIGHT, HIGH)` = ON)
 - [ ] All coordinates converted proportionally (X×0.4, Y×0.333)
 - [ ] Text size adjusted (recommended size 1-2)
 - [ ] Graphics dimensions scaled down proportionally
 - [ ] If colors incorrect, BGR conversion added
 - [ ] Display shows correctly, colors correct
-- [ ] Backlight brightness is normal
+- [ ] Backlight is ON
 
 ---
 

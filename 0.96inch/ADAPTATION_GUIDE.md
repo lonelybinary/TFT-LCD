@@ -13,7 +13,7 @@ This guide provides detailed instructions on how to adapt 3.5-inch tutorial code
 | **Column Offset 1** | 24 | For rotation 0/2 |
 | **Column Offset 2** | 24 | For rotation 1/3 |
 | **Row Offset** | 0, 0 | Usually 0 |
-| **Backlight Control** | PWM Reversed | `ledcWrite(0, 0)`=brightest, `ledcWrite(0, 255)`=darkest |
+| **Backlight Control** | On/Off (Active Low) | `digitalWrite(BLK, LOW)`=ON, `HIGH`=OFF |
 | **Color Mode** | RGB565 | 16-bit color depth |
 
 ## Key Differences
@@ -24,8 +24,8 @@ This guide provides detailed instructions on how to adapt 3.5-inch tutorial code
 - **Ratio**: Width approximately 1/4, Height approximately 1/3
 
 ### 2. Backlight Control Difference (Important!)
-- **3.5-inch**: PWM normal control, `ledcWrite(0, 255)`=brightest
-- **0.96-inch**: PWM reversed control, `ledcWrite(0, 0)`=brightest, `ledcWrite(0, 255)`=darkest
+- **3.5-inch**: On/Off (Active High), `digitalWrite(TFT_BACKLIGHT, HIGH)`=ON
+- **0.96-inch**: On/Off (Active Low), `digitalWrite(TFT_BACKLIGHT, LOW)`=ON
 
 ### 3. Offset Difference
 - **3.5-inch**: Offset `0, 0, 0, 0`
@@ -53,24 +53,22 @@ Arduino_ST7735 *gfx = new Arduino_ST7735(bus, TFT_RST, 0, false /* IPS */, 80, 1
 
 ### Step 2: Modify Backlight Control (Important!)
 
-**3.5-inch (PWM Normal Control)**:
+**3.5-inch (On/Off, Active High)**:
 ```cpp
-ledcSetup(0, 5000, 8);
-ledcAttachPin(TFT_BACKLIGHT, 0);
-ledcWrite(0, 255);  // 255 = 100% brightness (brightest)
+pinMode(TFT_BACKLIGHT, OUTPUT);
+digitalWrite(TFT_BACKLIGHT, HIGH);  // ON
 ```
 
-**0.96-inch (PWM Reversed Control)**:
+**0.96-inch (On/Off, Active Low)**:
 ```cpp
-ledcSetup(0, 5000, 8);
-ledcAttachPin(TFT_BACKLIGHT, 0);
-ledcWrite(0, 0);  // 0 = 100% brightness (brightest), 255 = darkest
+pinMode(TFT_BACKLIGHT, OUTPUT);
+digitalWrite(TFT_BACKLIGHT, LOW);   // ON (0.96 inch is Active Low)
 ```
 
 **Important Notes**:
-- 0.96-inch backlight control is **completely opposite** to other displays
-- If display doesn't light up, try changing `ledcWrite(0, 0)` to `ledcWrite(0, 255)`
-- When adjusting brightness: smaller value = brighter, larger value = darker
+- 0.96-inch backlight is **Active Low**: LOW=ON, HIGH=OFF
+- Other sizes are Active High: HIGH=ON, LOW=OFF
+- 背光仅支持 On/Off，无亮度调节
 
 ### Step 3: Adjust Coordinates and Dimensions
 
@@ -127,10 +125,9 @@ New Y coordinate = Original Y coordinate × (New height / Original height)
 // LCD object initialization
 Arduino_ST7796 *gfx = new Arduino_ST7796(bus, TFT_RST, 0, true, 320, 480, 0, 0, 0, 0);
 
-// Backlight control
-ledcSetup(0, 5000, 8);
-ledcAttachPin(TFT_BACKLIGHT, 0);
-ledcWrite(0, 255);
+// Backlight control (On/Off)
+pinMode(TFT_BACKLIGHT, OUTPUT);
+digitalWrite(TFT_BACKLIGHT, HIGH);  // ON
 
 // Display text
 gfx->setTextColor(WHITE);
@@ -144,10 +141,9 @@ gfx->println("Hello World");
 // LCD object initialization
 Arduino_ST7735 *gfx = new Arduino_ST7735(bus, TFT_RST, 0, false, 80, 160, 24, 0, 24, 0);
 
-// Backlight control (PWM reversed)
-ledcSetup(0, 5000, 8);
-ledcAttachPin(TFT_BACKLIGHT, 0);
-ledcWrite(0, 0);  // 0 = brightest
+// Backlight control (On/Off, Active Low)
+pinMode(TFT_BACKLIGHT, OUTPUT);
+digitalWrite(TFT_BACKLIGHT, LOW);   // ON
 
 // Display text (coordinates and font size both scaled down)
 gfx->setTextColor(WHITE);
@@ -221,8 +217,8 @@ int y = (160 - 8) / 2;  // 8 is text height for size 1
 
 ### Q1: Display doesn't light up?
 **A**: Check backlight control code:
-- Confirm using `ledcWrite(0, 0)` (0.96-inch uses reversed PWM)
-- If still not lighting up, try `ledcWrite(0, 255)`
+- Confirm using `digitalWrite(TFT_BACKLIGHT, LOW)` (0.96-inch is Active Low)
+- If still not lighting up, try `digitalWrite(TFT_BACKLIGHT, HIGH)`
 - Check if GPIO 41 connection is correct
 
 ### Q2: Display position offset?
@@ -307,12 +303,12 @@ After adaptation, check the following items:
 
 - [ ] LCD object initialization modified (`Arduino_ST7735`, resolution `80, 160`, offset `24, 0, 24, 0`)
 - [ ] IPS parameter set to `false`
-- [ ] Backlight control uses PWM reversed (`ledcWrite(0, 0)`)
+- [ ] Backlight control uses On/Off (0.96-inch: `digitalWrite(TFT_BACKLIGHT, LOW)` = ON)
 - [ ] All coordinates converted proportionally (X×0.25, Y×0.333)
 - [ ] Text size adjusted (recommended size 1-2)
 - [ ] Graphics dimensions scaled down proportionally
 - [ ] Display shows correctly, no offset
-- [ ] Backlight brightness is normal
+- [ ] Backlight is ON
 
 ---
 

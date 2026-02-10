@@ -24,7 +24,7 @@
   - Rotation 1/3: 480 x 320 (Landscape)
 - **Color Mode**: RGB565 (65,536 colors)
 - **Refresh Rate**: Supports high-speed refresh
-- **Backlight Control**: PWM control (Active High)
+- **Backlight Control**: On/Off only (Active High: HIGH=ON)
 
 ## Pin Definitions
 
@@ -32,7 +32,7 @@
 
 | Pin No. | Function | ESP32-S3 Connection | Description |
 |---------|----------|---------------------|-------------|
-| 1 | LEDA/BLK | GPIO 41 | Backlight control (PWM) |
+| 1 | LEDA/BLK | GPIO 41 | Backlight control (On/Off) |
 | 2 | GND | GND | Ground |
 | 3 | RESET | GPIO 42 | Reset signal |
 | 4 | DC/RS/A0 | GPIO 2 | Data/Command select (**Must connect**) |
@@ -132,7 +132,7 @@ The program displays:
 ## Frequently Asked Questions
 
 ### Q: Screen not lighting up?
-- **Check backlight connection**: Confirm GPIO 41 connection is correct, use PWM control
+- **Check backlight connection**: Confirm GPIO 41 connection is correct (On/Off: HIGH=ON)
 - **Check power supply**: Must use 3.3V, do not connect 5V
 - **Check code**: Confirm backlight control is set correctly
 
@@ -155,7 +155,7 @@ The program displays:
 ## Important Notes
 
 1. **Power Requirements**: Must use 3.3V, absolutely do not connect 5V, otherwise the display will be damaged
-2. **Backlight Control**: Use PWM to control backlight brightness
+2. **Backlight Control**: On/Off only (`digitalWrite(TFT_BACKLIGHT, HIGH)`=ON)
 3. **Hardware SPI**: MOSI and SCLK must be connected to VSPI hardware SPI pins (GPIO 11 and GPIO 12)
 4. **DC Pin**: DC/RS/A0 pin must be connected, otherwise the display will not work properly
 5. **Resolution**: Native resolution is 320x480 (Portrait), can be changed to 480x320 (Landscape) via rotation
@@ -172,7 +172,7 @@ The program displays:
 | Operating Voltage | 3.3V |
 | SPI Speed | Hardware SPI (VSPI) |
 | Display Type | IPS TFT-LCD |
-| Backlight | LED backlight (PWM control) |
+| Backlight | LED backlight (On/Off) |
 
 ## License
 

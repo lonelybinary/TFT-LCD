@@ -23,7 +23,7 @@
 - **Display Orientation**: Supports 0°, 90°, 180°, 270° rotation
 - **Color Mode**: RGB565 (65,536 colors)
 - **Refresh Rate**: Supports high-speed refresh
-- **Backlight Control**: PWM reversed control (0 = ON, 255 = OFF)
+- **Backlight Control**: On/Off only (Active Low: LOW=ON)
 
 ## Pin Definitions
 
@@ -123,7 +123,7 @@ If the display position is inaccurate, you can:
 - **ESP32 Arduino Framework**: 2.0.17 (Required for GFX Library 1.6.4 compatibility)
   - ⚠️ **Important**: Arduino IDE version must use ESP32 Arduino framework 2.0.17
   - ⚠️ **Warning**: **Do not use ESP32 framework 3.X.X** (has compatibility issues with GFX Library 1.6.4)
-  - ⚠️ **Backlight Control**: 0.96 inch display uses PWM reversed control (0 = ON, 255 = OFF), different from other screens
+  - ⚠️ **Backlight Control**: 0.96 inch uses On/Off (Active Low: LOW=ON), different from other screens
 
 ## Display Features
 
@@ -135,9 +135,9 @@ The program displays:
 ## Frequently Asked Questions
 
 ### Q: Screen not lighting up?
-- **Check backlight connection**: Backlight uses PWM reversed control, confirm GPIO 41 connection is correct
+- **Check backlight connection**: Backlight is On/Off (Active Low), confirm GPIO 41 connection is correct
 - **Check power supply**: Must use 3.3V, do not connect 5V
-- **Check code**: Confirm backlight control uses `ledcWrite(0, 0)` for maximum brightness (reversed PWM)
+- **Check code**: Confirm backlight uses `digitalWrite(TFT_BACKLIGHT, LOW)` for ON
 
 ### Q: Display position inaccurate?
 - **Adjust offset**: Modify `col offset` and `row offset` parameters in the code
@@ -159,7 +159,7 @@ The program displays:
 ## Important Notes
 
 1. **Power Requirements**: Must use 3.3V, absolutely do not connect 5V, otherwise the display will be damaged
-2. **Backlight Control**: Backlight uses PWM reversed control (0 = ON, 255 = OFF), different from other screens
+2. **Backlight Control**: On/Off only (0.96 inch: LOW=ON), different from other screens
 3. **Hardware SPI**: MOSI and SCLK must be connected to VSPI hardware SPI pins (GPIO 11 and GPIO 12)
 4. **DC Pin**: DC/RS/A0 pin must be connected, otherwise the display will not work properly
 5. **Offset**: Different batches of displays may have different offsets, adjust according to actual situation
@@ -177,7 +177,7 @@ The program displays:
 | SPI Speed | Hardware SPI (VSPI) |
 | Display Type | TFT-LCD (Normally black) |
 | IPS Parameter | `false` (Must set to false for correct color display) |
-| Backlight | LED backlight (PWM reversed) |
+| Backlight | LED backlight (On/Off, Active Low) |
 
 ## License
 

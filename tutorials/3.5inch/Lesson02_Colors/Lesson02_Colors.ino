@@ -2,12 +2,12 @@
  * Lesson 02: Colors
  * 3.5 inch TFT-LCD Display Tutorial
  * 
- * 课程目标：学习如何使用颜色
- * 
- * 知识点：
- * - 预定义颜色
- * - 填充屏幕颜色
- * - 设置文本颜色
+ * Course objectives: Learn how to use colors
+ *
+ * Key concepts:
+ * - Predefined colors
+ * - Fill screen with color
+ * - Set text color
  * 
  * Library Dependencies:
  * - Arduino GFX Library (moononournation/GFX Library for Arduino@1.6.4)
@@ -24,9 +24,9 @@
 #define TFT_BACKLIGHT 41
 
 // ==================== LCD Object ====================
-// 注意：如需适配其他屏幕，请查看对应屏幕的测试程序
-// 例如：0.96寸请查看 0.96inch/code/0.96inch_Test/0.96inch_Test.ino
-// 详细适配指南请参考各屏幕文件夹下的ADAPTATION_GUIDE.md文件
+// Note: For other screen sizes, see the test program for each size
+// e.g. 0.96 inch: 0.96inch/code/0.96inch_Test/0.96inch_Test.ino
+// See ADAPTATION_GUIDE.md in each screen folder for adaptation details
 Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, TFT_SCLK, TFT_MOSI, GFX_NOT_DEFINED, 1, true);
 Arduino_ST7796 *gfx = new Arduino_ST7796(bus, TFT_RST, 0, true /* IPS */, 320, 480, 0, 0, 0, 0);
 
@@ -38,12 +38,9 @@ void setup() {
   Serial.println("Lesson 02: Colors");
   Serial.println("Initializing LCD...");
   
-  // Initialize backlight (PWM)
-  // 注意：0.96寸使用Active Low控制（digitalWrite(TFT_BACKLIGHT, LOW)）
-  // 其他屏幕使用PWM控制，请查看对应屏幕的测试程序
-  ledcSetup(0, 5000, 8);
-  ledcAttachPin(TFT_BACKLIGHT, 0);
-  ledcWrite(0, 255);
+  // Initialize backlight (On/Off only)
+  pinMode(TFT_BACKLIGHT, OUTPUT);
+  digitalWrite(TFT_BACKLIGHT, HIGH);  // ON
   
   // Reset display
   pinMode(TFT_RST, OUTPUT);
@@ -64,42 +61,42 @@ void setup() {
   
   // ==================== Lesson Content ====================
   
-  // Part 1: 使用预定义颜色填充屏幕
+  // Part 1: Fill screen with predefined colors
   Serial.println("Displaying predefined colors...");
   
-  // 红色
+  // Red
   gfx->fillScreen(RED);
   delay(2000);
   
-  // 绿色
+  // Green
   gfx->fillScreen(GREEN);
   delay(2000);
   
-  // 蓝色
+  // Blue
   gfx->fillScreen(BLUE);
   delay(2000);
   
-  // 黄色
+  // Yellow
   gfx->fillScreen(YELLOW);
   delay(2000);
   
-  // 洋红色
+  // Magenta
   gfx->fillScreen(MAGENTA);
   delay(2000);
   
-  // 青色
+  // Cyan
   gfx->fillScreen(CYAN);
   delay(2000);
   
-  // 白色
+  // White
   gfx->fillScreen(WHITE);
   delay(2000);
   
-  // 黑色
+  // Black
   gfx->fillScreen(BLACK);
   delay(2000);
   
-  // Part 2: 显示颜色名称列表
+  // Part 2: Display color names list
   Serial.println("Displaying color names...");
   gfx->fillScreen(BLACK);
   

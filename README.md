@@ -49,7 +49,7 @@ All projects use unified pin definitions with **Hardware SPI (VSPI)**:
 - **ESP32 Arduino Framework**: 2.0.17 (Required for GFX Library 1.6.4 compatibility)
   - ⚠️ **Important**: ESP32 Arduino framework 2.0.17 is required for Arduino IDE version
   - ⚠️ **Warning**: **Do not use ESP32 framework 3.X.X** with GFX Library 1.6.4 (compatibility issues)
-  - ⚠️ **PWM API**: ESP32 2.0.17 uses `ledcSetup()` + `ledcAttachPin()`, not `ledcAttach()`
+  - 背光为 On/Off 控制（`digitalWrite(TFT_BACKLIGHT, HIGH/LOW)`），不使用 PWM
 
 ## Project Structure
 

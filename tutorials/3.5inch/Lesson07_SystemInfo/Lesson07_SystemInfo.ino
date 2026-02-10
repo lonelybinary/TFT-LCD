@@ -2,13 +2,13 @@
  * Lesson 07: System Info Display
  * 3.5 inch TFT-LCD Display Tutorial
  * 
- * 课程目标：学习创建系统信息显示界面
- * 
- * 知识点：
- * - UI组件设计（标签、进度条、分隔线）
- * - 信息布局和层次结构
- * - 状态指示器设计
- * - 函数封装和代码组织
+ * Course objectives: Learn to create a system info display UI
+ *
+ * Key concepts:
+ * - UI components (labels, progress bar, separators)
+ * - Info layout and hierarchy
+ * - Status indicator design
+ * - Function encapsulation and code organization
  * 
  * Library Dependencies:
  * - Arduino GFX Library (moononournation/GFX Library for Arduino@1.6.4)
@@ -25,42 +25,42 @@
 #define TFT_BACKLIGHT 41
 
 // ==================== LCD Object ====================
-// 注意：如需适配其他屏幕，请查看对应屏幕的测试程序
-// 例如：0.96寸请查看 0.96inch/code/0.96inch_Test/0.96inch_Test.ino
-// 详细适配指南请参考各屏幕文件夹下的ADAPTATION_GUIDE.md文件
+// Note: For other screen sizes, see the test program for each size
+// e.g. 0.96 inch: 0.96inch/code/0.96inch_Test/0.96inch_Test.ino
+// See ADAPTATION_GUIDE.md in each screen folder for adaptation details
 Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, TFT_SCLK, TFT_MOSI, GFX_NOT_DEFINED, 1, true);
 Arduino_ST7796 *gfx = new Arduino_ST7796(bus, TFT_RST, 0, true /* IPS */, 320, 480, 0, 0, 0, 0);
 
 // ==================== Helper Functions ====================
 
-// 绘制标签（带背景的文本）
+// Draw label (text with background)
 void drawLabel(const char* text, int x, int y, uint16_t bgColor, uint16_t textColor, int textSize = 2) {
   int textWidth = strlen(text) * 6 * textSize;
   int textHeight = 8 * textSize;
   
-  // 绘制背景
+  // Draw background
   gfx->fillRect(x, y, textWidth + 8, textHeight + 4, bgColor);
   
-  // 绘制文本
+  // Draw text
   gfx->setTextColor(textColor);
   gfx->setTextSize(textSize);
   gfx->setCursor(x + 4, y + 4);
   gfx->println(text);
 }
 
-// 绘制进度条
+// Draw progress bar
 void drawProgressBar(int x, int y, int width, int height, int percent, uint16_t bgColor, uint16_t fillColor) {
-  // 绘制背景框
+  // Draw background frame
   gfx->drawRect(x, y, width, height, bgColor);
   
-  // 计算填充宽度
+  // Compute fill width
   int fillWidth = (width * percent) / 100;
   if (fillWidth > 0) {
     gfx->fillRect(x + 2, y + 2, fillWidth - 4, height - 4, fillColor);
   }
 }
 
-// 居中显示文本
+// Draw centered text
 void drawCenteredText(const char* text, int y, uint16_t color, int size) {
   gfx->setTextSize(size);
   gfx->setTextColor(color);
@@ -70,7 +70,7 @@ void drawCenteredText(const char* text, int y, uint16_t color, int size) {
   gfx->println(text);
 }
 
-// 绘制分隔线
+// Draw separator line
 void drawSeparator(int y, uint16_t color) {
   gfx->drawFastHLine(20, y, gfx->width() - 40, color);
 }
@@ -83,12 +83,9 @@ void setup() {
   Serial.println("Lesson 07: System Info Display");
   Serial.println("Initializing LCD...");
   
-  // Initialize backlight (PWM)
-  // 注意：0.96寸使用Active Low控制（digitalWrite(TFT_BACKLIGHT, LOW)）
-  // 其他屏幕使用PWM控制，请查看对应屏幕的测试程序
-  ledcSetup(0, 5000, 8);
-  ledcAttachPin(TFT_BACKLIGHT, 0);
-  ledcWrite(0, 255);
+  // Initialize backlight (On/Off only)
+  pinMode(TFT_BACKLIGHT, OUTPUT);
+  digitalWrite(TFT_BACKLIGHT, HIGH);  // ON
   
   // Reset display
   pinMode(TFT_RST, OUTPUT);
@@ -109,17 +106,17 @@ void setup() {
   
   // ==================== Lesson Content ====================
   
-  // 系统信息显示界面
+  // System info display UI
   Serial.println("Displaying System Info Interface");
   gfx->fillScreen(BLACK);
   
-  // 标题
+  // Title
   drawCenteredText("SYSTEM INFO", 20, YELLOW, 2);
   
-  // 分隔线
+  // Separator
   drawSeparator(60, CYAN);
   
-  // 信息项
+  // Info items
   gfx->setTextColor(WHITE);
   gfx->setTextSize(2);
   gfx->setCursor(30, 100);
@@ -139,10 +136,10 @@ void setup() {
   
   gfx->setCursor(30, 280);
   gfx->print("Signal: ");
-  // 绘制信号强度指示器
+  // Draw signal strength indicator
   for (int i = 0; i < 4; i++) {
     int barHeight = (i + 1) * 8;
-    uint16_t color = (i < 3) ? GREEN : gfx->color565(128, 128, 128);  // 灰色使用color565创建
+    uint16_t color = (i < 3) ? GREEN : gfx->color565(128, 128, 128);  // Gray via color565
     gfx->fillRect(150 + i * 12, 280 + (20 - barHeight), 10, barHeight, color);
   }
   

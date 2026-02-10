@@ -2,13 +2,13 @@
  * Lesson 08: Menu Interface
  * 3.5 inch TFT-LCD Display Tutorial
  * 
- * 课程目标：学习创建菜单界面
- * 
- * 知识点：
- * - 菜单界面设计
- * - 高亮当前选项
- * - 标题栏设计
- * - 菜单项布局
+ * Course objectives: Learn to create a menu interface
+ *
+ * Key concepts:
+ * - Menu UI design
+ * - Highlight current option
+ * - Title bar design
+ * - Menu item layout
  * 
  * Library Dependencies:
  * - Arduino GFX Library (moononournation/GFX Library for Arduino@1.6.4)
@@ -25,15 +25,15 @@
 #define TFT_BACKLIGHT 41
 
 // ==================== LCD Object ====================
-// 注意：如需适配其他屏幕，请查看对应屏幕的测试程序
-// 例如：0.96寸请查看 0.96inch/code/0.96inch_Test/0.96inch_Test.ino
-// 详细适配指南请参考各屏幕文件夹下的ADAPTATION_GUIDE.md文件
+// Note: For other screen sizes, see the test program for each size
+// e.g. 0.96 inch: 0.96inch/code/0.96inch_Test/0.96inch_Test.ino
+// See ADAPTATION_GUIDE.md in each screen folder for adaptation details
 Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, TFT_SCLK, TFT_MOSI, GFX_NOT_DEFINED, 1, true);
 Arduino_ST7796 *gfx = new Arduino_ST7796(bus, TFT_RST, 0, true /* IPS */, 320, 480, 0, 0, 0, 0);
 
 // ==================== Helper Functions ====================
 
-// 居中显示文本
+// Draw centered text
 void drawCenteredText(const char* text, int y, uint16_t color, int size) {
   gfx->setTextSize(size);
   gfx->setTextColor(color);
@@ -51,12 +51,9 @@ void setup() {
   Serial.println("Lesson 08: Menu Interface");
   Serial.println("Initializing LCD...");
   
-  // Initialize backlight (PWM)
-  // 注意：0.96寸使用Active Low控制（digitalWrite(TFT_BACKLIGHT, LOW)）
-  // 其他屏幕使用PWM控制，请查看对应屏幕的测试程序
-  ledcSetup(0, 5000, 8);
-  ledcAttachPin(TFT_BACKLIGHT, 0);
-  ledcWrite(0, 255);
+  // Initialize backlight (On/Off only)
+  pinMode(TFT_BACKLIGHT, OUTPUT);
+  digitalWrite(TFT_BACKLIGHT, HIGH);  // ON
   
   // Reset display
   pinMode(TFT_RST, OUTPUT);
@@ -77,22 +74,22 @@ void setup() {
   
   // ==================== Lesson Content ====================
   
-  // 菜单界面
+  // Menu interface
   Serial.println("Displaying Menu Interface");
   gfx->fillScreen(BLACK);
   
-  // 标题栏
+  // Title bar
   gfx->fillRect(0, 0, 320, 50, BLUE);
   drawCenteredText("MENU", 10, WHITE, 2);
   
-  // 菜单项
+  // Menu items
   int menuY = 70;
   const char* menuItems[] = {"Settings", "Data", "About", "Exit"};
   uint16_t menuColors[] = {WHITE, CYAN, YELLOW, RED};
   
   gfx->setTextSize(2);
   for (int i = 0; i < 4; i++) {
-    // 高亮当前项（第一项）
+    // Highlight current item (first one)
     if (i == 0) {
       gfx->fillRect(20, menuY - 5, 280, 50, CYAN);
       gfx->setTextColor(BLACK);

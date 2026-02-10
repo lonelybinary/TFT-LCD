@@ -2,13 +2,13 @@
  * Lesson 09: Data Monitoring Interface
  * 3.5 inch TFT-LCD Display Tutorial
  * 
- * 课程目标：学习创建数据监控界面
- * 
- * 知识点：
- * - 卡片式布局设计
- * - 数据可视化（进度条）
- * - 多卡片排列
- * - 状态指示
+ * Course objectives: Learn to create a data monitoring interface
+ *
+ * Key concepts:
+ * - Card-style layout
+ * - Data visualization (progress bar)
+ * - Multiple cards layout
+ * - Status indicator
  * 
  * Library Dependencies:
  * - Arduino GFX Library (moononournation/GFX Library for Arduino@1.6.4)
@@ -25,42 +25,42 @@
 #define TFT_BACKLIGHT 41
 
 // ==================== LCD Object ====================
-// 注意：如需适配其他屏幕，请查看对应屏幕的测试程序
-// 例如：0.96寸请查看 0.96inch/code/0.96inch_Test/0.96inch_Test.ino
-// 详细适配指南请参考各屏幕文件夹下的ADAPTATION_GUIDE.md文件
+// Note: For other screen sizes, see the test program for each size
+// e.g. 0.96 inch: 0.96inch/code/0.96inch_Test/0.96inch_Test.ino
+// See ADAPTATION_GUIDE.md in each screen folder for adaptation details
 Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, TFT_SCLK, TFT_MOSI, GFX_NOT_DEFINED, 1, true);
 Arduino_ST7796 *gfx = new Arduino_ST7796(bus, TFT_RST, 0, true /* IPS */, 320, 480, 0, 0, 0, 0);
 
 // ==================== Helper Functions ====================
 
-// 绘制标签（带背景的文本）
+// Draw label (text with background)
 void drawLabel(const char* text, int x, int y, uint16_t bgColor, uint16_t textColor, int textSize = 2) {
   int textWidth = strlen(text) * 6 * textSize;
   int textHeight = 8 * textSize;
   
-  // 绘制背景
+  // Draw background
   gfx->fillRect(x, y, textWidth + 8, textHeight + 4, bgColor);
   
-  // 绘制文本
+  // Draw text
   gfx->setTextColor(textColor);
   gfx->setTextSize(textSize);
   gfx->setCursor(x + 4, y + 4);
   gfx->println(text);
 }
 
-// 绘制进度条
+// Draw progress bar
 void drawProgressBar(int x, int y, int width, int height, int percent, uint16_t bgColor, uint16_t fillColor) {
-  // 绘制背景框
+  // Draw background frame
   gfx->drawRect(x, y, width, height, bgColor);
   
-  // 计算填充宽度
+  // Compute fill width
   int fillWidth = (width * percent) / 100;
   if (fillWidth > 0) {
     gfx->fillRect(x + 2, y + 2, fillWidth - 4, height - 4, fillColor);
   }
 }
 
-// 居中显示文本
+// Draw centered text
 void drawCenteredText(const char* text, int y, uint16_t color, int size) {
   gfx->setTextSize(size);
   gfx->setTextColor(color);
@@ -70,7 +70,7 @@ void drawCenteredText(const char* text, int y, uint16_t color, int size) {
   gfx->println(text);
 }
 
-// 绘制分隔线
+// Draw separator line
 void drawSeparator(int y, uint16_t color) {
   gfx->drawFastHLine(20, y, gfx->width() - 40, color);
 }
@@ -83,12 +83,9 @@ void setup() {
   Serial.println("Lesson 09: Data Monitoring Interface");
   Serial.println("Initializing LCD...");
   
-  // Initialize backlight (PWM)
-  // 注意：0.96寸使用Active Low控制（digitalWrite(TFT_BACKLIGHT, LOW)）
-  // 其他屏幕使用PWM控制，请查看对应屏幕的测试程序
-  ledcSetup(0, 5000, 8);
-  ledcAttachPin(TFT_BACKLIGHT, 0);
-  ledcWrite(0, 255);
+  // Initialize backlight (On/Off only)
+  pinMode(TFT_BACKLIGHT, OUTPUT);
+  digitalWrite(TFT_BACKLIGHT, HIGH);  // ON
   
   // Reset display
   pinMode(TFT_RST, OUTPUT);
@@ -109,15 +106,15 @@ void setup() {
   
   // ==================== Lesson Content ====================
   
-  // 数据监控界面
+  // Data monitoring interface
   Serial.println("Displaying Data Monitoring Interface");
   gfx->fillScreen(BLACK);
   
-  // 标题
+  // Title
   drawCenteredText("MONITOR", 20, WHITE, 2);
   drawSeparator(60, GREEN);
   
-  // 数据卡片1（左侧）
+  // Data card 1 (left)
   gfx->drawRect(30, 100, 120, 100, CYAN);
   gfx->setTextColor(CYAN);
   gfx->setTextSize(2);
@@ -129,7 +126,7 @@ void setup() {
   gfx->println("45%");
   drawProgressBar(40, 170, 100, 15, 45, CYAN, GREEN);
   
-  // 数据卡片2（右侧）
+  // Data card 2 (right)
   gfx->drawRect(170, 100, 120, 100, YELLOW);
   gfx->setTextColor(YELLOW);
   gfx->setTextSize(2);
@@ -141,7 +138,7 @@ void setup() {
   gfx->println("62%");
   drawProgressBar(180, 170, 100, 15, 62, YELLOW, GREEN);
   
-  // 状态指示（居中显示）
+  // Status indicator (centered)
   gfx->setTextColor(WHITE);
   gfx->setTextSize(2);
   gfx->setCursor(30, 230);

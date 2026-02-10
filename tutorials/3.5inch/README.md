@@ -18,7 +18,7 @@ This tutorial contains 11 progressive lessons, starting from the most basic "Hel
 **Important Notes**:
 - According to the specification, this is an IPS display, so the IPS parameter in code is set to `true`
 - `Arduino_ST7796` class can drive ST7796 chip
-- Backlight uses PWM control (different from 0.96-inch Active Low control)
+- Backlight uses On/Off control (3.5-inch: HIGH=ON; 0.96-inch: LOW=ON)
 - If color display is incorrect, check IPS parameter settings
 
 ## Hardware Requirements
@@ -39,13 +39,13 @@ This tutorial contains 11 progressive lessons, starting from the most basic "Hel
 | DC (4) | GPIO 2 | Data/Command select (**Must connect**) |
 | MOSI (5) | GPIO 11 | SPI data (VSPI hardware SPI) |
 | SCLK (6) | GPIO 12 | SPI clock (VSPI hardware SPI) |
-| BLK (1) | GPIO 41 | Backlight control (PWM) |
+| BLK (1) | GPIO 41 | Backlight control (On/Off) |
 
 **Important Notes**:
 - Must use 3.3V power supply, cannot connect 5V
 - DC pin must be connected
 - MOSI and SCLK must connect to VSPI hardware SPI pins
-- Backlight uses PWM control, need to configure PWM channel
+- Backlight is On/Off only (pinMode + digitalWrite)
 
 ## Software Requirements
 
@@ -68,7 +68,7 @@ This tutorial contains 11 progressive lessons, starting from the most basic "Hel
 ### [Lesson 01: Hello World](Lesson01_HelloWorld/README.md)
 **Learning Objectives**: Display first text
 - Display initialization
-- PWM backlight control
+- On/Off backlight control
 - Basic text display
 - Set text color and position
 
@@ -195,7 +195,7 @@ Each lesson contains:
 
 **Q: Display not lighting up?**
 - Check backlight connection (GPIO 41)
-- 3.5-inch display uses PWM control for backlight, need to configure PWM correctly
+- 3.5-inch display backlight is On/Off only (digitalWrite HIGH=ON)
 - Check if power supply is 3.3V
 
 **Q: Display garbled or abnormal?**
@@ -222,7 +222,7 @@ Each lesson contains:
 **Q: Code runs but display shows nothing?**
 - Check serial output for errors
 - Confirm display initialization succeeded
-- Check backlight PWM configuration is correct
+- Check backlight pinMode and digitalWrite are correct
 
 **Q: Color display incorrect?**
 - **Check IPS parameter**: According to specification, 3.5-inch display is IPS, IPS parameter should be set to `true`
@@ -230,8 +230,8 @@ Each lesson contains:
 - Confirm using `Arduino_ST7796` class
 
 **Q: Backlight control method?**
-- 3.5-inch display uses PWM control for backlight (different from 0.96-inch Active Low)
-- Need to use `ledcSetup()`, `ledcAttachPin()`, and `ledcWrite()` functions
+- 3.5-inch: On/Off only, `digitalWrite(TFT_BACKLIGHT, HIGH)`=ON (0.96-inch: LOW=ON)
+- Use `pinMode(TFT_BACKLIGHT, OUTPUT)` and `digitalWrite()`, no PWM
 - Brightness range: 0-255 (0=darkest, 255=brightest)
 
 ## Technical Support
