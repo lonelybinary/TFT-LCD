@@ -1,5 +1,13 @@
 # 2.4 Inch TFT-LCD Display Driver
 
+## Photos
+
+**Front**
+![2.4 inch front](./images/2.4front.png)
+
+**Back**
+![2.4 inch back](./images/2.4back.png)
+
 ## Display Specifications
 
 ### Basic Information

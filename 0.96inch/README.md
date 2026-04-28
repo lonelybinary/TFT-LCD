@@ -1,5 +1,13 @@
 # 0.96 Inch TFT-LCD Display Driver
 
+## Photos
+
+**Front**
+![0.96 inch front](./images/0.96front.png)
+
+**Back**
+![0.96 inch back](./images/0.96back.png)
+
 ## Display Specifications
 
 ### Basic Information

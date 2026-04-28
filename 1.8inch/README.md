@@ -1,5 +1,13 @@
 # 1.8 Inch TFT-LCD Display Driver
 
+## Photos
+
+**Front**
+![1.8 inch front](./images/1.8front.png)
+
+**Back**
+![1.8 inch back](./images/1.8back.png)
+
 ## Display Specifications
 
 ### Basic Information

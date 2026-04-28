@@ -1,5 +1,13 @@
 # 3.5 Inch TFT-LCD Display Driver
 
+## Photos
+
+**Front**
+![3.5 inch front](./images/3.5front.png)
+
+**Back**
+![3.5 inch back](./images/3.5back.png)
+
 ## Display Specifications
 
 ### Basic Information

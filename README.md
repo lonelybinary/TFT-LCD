@@ -11,6 +11,8 @@ ESP32-S3 Multi-size TFT-LCD Display Driver Example Code (Using Arduino GFX Offic
 - 2.8 inch (240x320) - ST7789
 - 3.5 inch (320x480) - ST7796S/ST7365
 
+**Note:** These display modules are display-only and do not include touch (no touch panel/controller).
+
 ## Hardware Requirements
 
 - ESP32-S3 development board
