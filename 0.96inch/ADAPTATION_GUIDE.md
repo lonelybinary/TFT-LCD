@@ -68,7 +68,7 @@ digitalWrite(TFT_BACKLIGHT, LOW);   // ON (0.96 inch is Active Low)
 **Important Notes**:
 - 0.96-inch backlight is **Active Low**: LOW=ON, HIGH=OFF
 - Other sizes are Active High: HIGH=ON, LOW=OFF
-- 背光仅支持 On/Off，无亮度调节
+- Backlight is On/Off only (no brightness levels)
 
 ### Step 3: Adjust Coordinates and Dimensions
 

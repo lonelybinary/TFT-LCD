@@ -131,7 +131,7 @@ If the display position is inaccurate, you can:
 - **ESP32 Arduino Framework**: 2.0.17 (Required for GFX Library 1.6.4 compatibility)
   - ⚠️ **Important**: Arduino IDE version must use ESP32 Arduino framework 2.0.17
   - ⚠️ **Warning**: **Do not use ESP32 framework 3.X.X** (has compatibility issues with GFX Library 1.6.4)
-  - 背光为 On/Off 控制（digitalWrite），不使用 PWM
+  - Backlight is On/Off only (digitalWrite), no PWM
 
 ## Display Features
 
