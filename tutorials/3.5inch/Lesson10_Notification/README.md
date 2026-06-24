@@ -2,33 +2,34 @@
 
 ## Course Objectives
 
-Learn to create a notification interface and master card design and icon-text combination.
+Build a **notification card** — the kind of pop-up you see on a phone, with an icon, a
+message, and a close button.
 
 ## Key Concepts
 
-### 1. Notification Card Design
+### 1. The notification card
 
-#### Card Center Layout
-Calculate card position to center it:
+#### A centered panel
+Use a filled rectangle for the card, with a border around it:
 
 ```cpp
 int cardX = 30;
 int cardY = 80;
 int cardW = 260;
 int cardH = 200;
-gfx->fillRect(cardX, cardY, cardW, cardH, WHITE);
-gfx->drawRect(cardX, cardY, cardW, cardH, BLACK);
+gfx->fillRect(cardX, cardY, cardW, cardH, WHITE);  // white panel
+gfx->drawRect(cardX, cardY, cardW, cardH, BLACK);  // black border
 ```
 
-#### Card Style
-- **White Background**: Stand out
-- **Black Border**: Clear boundary
-- **Appropriate Margins**: Leave screen margins
+#### Card style choices
+- **White background** so it stands out.
+- **Black border** for a clear edge.
+- **Margins** around the card so it doesn't touch the screen edges.
 
-### 2. Icon Design
+### 2. An icon
 
-#### Circular Icon Background
-Use circle as icon background:
+#### A circular icon background
+A filled circle makes a nice icon badge:
 
 ```cpp
 int iconX = cardX + 30;
@@ -36,20 +37,19 @@ int iconY = cardY + cardH / 2;
 gfx->fillCircle(iconX, iconY, 25, BLUE);
 ```
 
-#### Icon Content
-Display text on circular background:
+#### Symbol inside the icon
+Print a symbol (like `"!"`) on top of the circle:
 
 ```cpp
 gfx->setTextColor(WHITE);
 gfx->setTextSize(3);
-gfx->setCursor(iconX - 8, iconY - 10);
+gfx->setCursor(iconX - 8, iconY - 10);  // nudge so it centers
 gfx->println("!");
 ```
 
-### 3. Text Content Layout
+### 3. Laying out the message
 
-#### Multi-line Text
-Use different Y coordinates to display multi-line text:
+Print each line of the message at a different y position:
 
 ```cpp
 gfx->setCursor(cardX + 70, cardY + 40);
@@ -60,10 +60,10 @@ gfx->setCursor(cardX + 70, cardY + 120);
 gfx->println("unread items");
 ```
 
-### 4. Close Button
+### 4. A close button
 
-#### Button Position
-Located at top-right corner of card:
+#### Position it in the top-right corner
+Compute its spot relative to the card so it always sits in the corner:
 
 ```cpp
 int btnX = cardX + cardW - 25;
@@ -71,8 +71,7 @@ int btnY = cardY + 10;
 gfx->fillRect(btnX, btnY, 20, 20, RED);
 ```
 
-#### Button Content
-Display "X" symbol:
+#### An "X" inside it
 
 ```cpp
 gfx->setTextColor(WHITE);
@@ -83,10 +82,10 @@ gfx->print("X");
 
 ## Code Explanation
 
-### Card Layout
+### The card
 
 ```cpp
-// Notification card (centered display, leave margins)
+// Centered card with margins
 int cardX = 30;
 int cardY = 80;
 int cardW = 260;
@@ -95,17 +94,17 @@ gfx->fillRect(cardX, cardY, cardW, cardH, WHITE);
 gfx->drawRect(cardX, cardY, cardW, cardH, BLACK);
 ```
 
-### Icon and Text
+### Icon and text
 
 ```cpp
-// Icon area (left side)
+// Icon (left side)
 gfx->fillCircle(iconX, iconY, 25, BLUE);
 gfx->setTextColor(WHITE);
 gfx->setTextSize(3);
 gfx->setCursor(iconX - 8, iconY - 10);
 gfx->println("!");
 
-// Notification content (middle area)
+// Message (middle)
 gfx->setTextColor(BLACK);
 gfx->setTextSize(2);
 gfx->setCursor(cardX + 70, cardY + 40);
@@ -114,39 +113,30 @@ gfx->println("New Message");
 
 ## Expected Result
 
-Display notification interface, including:
-- White notification card (centered)
-- Blue circular icon (left side, with exclamation mark)
-- Notification text content (middle)
-- Red close button (top-right corner)
+A notification screen showing:
+- A centered white card
+- A blue circular icon with a "!" (left side)
+- The message text (middle)
+- A red close button with an "X" (top-right corner)
 
 ## Extended Exercises
 
-1. **Add Multiple Notifications**:
-   - Create notification list
-   - Implement notification scrolling
+1. **Show several notifications** — make a list and let it scroll.
 
-2. **Add Animation Effects**:
-   - Fade in/out
-   - Slide effects
+2. **Add animation** — fade the card in/out or slide it onto the screen.
 
-3. **Implement Interaction Functions**:
-   - Click close button
-   - Click notification to view details
+3. **Make it interactive** — react when the close button or the card is pressed (you'd add a
+   button or touch input for this).
 
 ## Frequently Asked Questions
 
-**Q: How to adjust card size?**
-- Modify `cardW` and `cardH` variables
-- Ensure content fits card size
+**Q: How do I resize the card?**
+- Change `cardW` and `cardH`. Because the icon, text, and button are positioned relative to
+  the card, they'll move with it — just check everything still fits.
 
-**Q: How to change icon style?**
-- Use different graphics (rectangle, triangle, etc.)
-- Use different icon symbols
+**Q: How do I change the icon?**
+- Swap the circle for another shape (rectangle, triangle), or print a different symbol.
 
 ## Next Step
 
-After completing this course, you can:
-- Create your own notification system
-- Add notification management functions
-- Implement notification interactions
+- [Lesson 11: Clock Display](../Lesson11_Clock/README.md) — the final project: an analog clock face.

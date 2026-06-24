@@ -2,52 +2,54 @@
 
 ## Course Objectives
 
-Learn to create a menu interface and master menu item layout and highlight display.
+Build a **menu** — a list of options with one item highlighted as "selected". You'll learn to
+store items in an array and highlight the current choice.
 
 ## Key Concepts
 
-### 1. Title Bar Design
+### 1. A title bar
 
-Use filled rectangle to create title bar:
+A filled rectangle across the top makes a clean title bar:
 
 ```cpp
 gfx->fillRect(0, 0, 320, 50, BLUE);
 drawCenteredText("MENU", 10, WHITE, 2);
 ```
 
-### 2. Menu Item Layout
+### 2. Laying out the menu items
 
-#### Menu Item Array
-Use array to store menu items and colors:
+#### Store items in arrays
+Keep the menu text and each item's color in matching arrays:
 
 ```cpp
 const char* menuItems[] = {"Settings", "Data", "About", "Exit"};
 uint16_t menuColors[] = {WHITE, CYAN, YELLOW, RED};
 ```
 
-#### Menu Item Spacing
-Maintain appropriate vertical spacing:
+#### Space the items evenly
+Move down a fixed amount for each item:
 
 ```cpp
-menuY += 60;  // Each menu item spacing 60 pixels
+menuY += 60;  // 60 pixels between items
 ```
 
-### 3. Highlight Current Option
+### 3. Highlighting the selected item
 
-Use background color to highlight currently selected menu item:
+To show which item is selected, draw a colored bar behind it and switch the text to a
+contrasting color:
 
 ```cpp
-if (i == 0) {
-  gfx->fillRect(20, menuY - 5, 280, 50, CYAN);
-  gfx->setTextColor(BLACK);
+if (i == 0) {  // item 0 is selected
+  gfx->fillRect(20, menuY - 5, 280, 50, CYAN);  // highlight bar
+  gfx->setTextColor(BLACK);                     // dark text on light bar
 } else {
-  gfx->setTextColor(menuColors[i]);
+  gfx->setTextColor(menuColors[i]);             // normal color
 }
 ```
 
-### 4. Menu Item Indicator
+### 4. A selection arrow
 
-Use ">" symbol to represent menu items:
+A `">"` in front of each item makes the list feel like a menu:
 
 ```cpp
 gfx->print("> ");
@@ -56,67 +58,58 @@ gfx->println(menuItems[i]);
 
 ## Code Explanation
 
-### Menu Loop
+### The menu-drawing loop
 
 ```cpp
 gfx->setTextSize(2);
 for (int i = 0; i < 4; i++) {
-  // Highlight current item
+  // Highlight the selected item (item 0 here)
   if (i == 0) {
     gfx->fillRect(20, menuY - 5, 280, 50, CYAN);
     gfx->setTextColor(BLACK);
   } else {
     gfx->setTextColor(menuColors[i]);
   }
-  
+
   gfx->setCursor(40, menuY);
   gfx->print("> ");
   gfx->println(menuItems[i]);
-  
-  menuY += 60;
+
+  menuY += 60;  // move down for the next item
 }
 ```
 
 ## Expected Result
 
-Display menu interface, including:
-- Blue title bar
-- 4 menu items
-- First item highlighted (cyan background)
-- Different colored menu items
+A menu screen showing:
+- A blue title bar
+- Four menu items
+- The first item highlighted with a cyan bar
+- The other items in their own colors
 
 ## Extended Exercises
 
-1. **Add Menu Navigation**:
+1. **Move the selection** (e.g. with a button later on):
    ```cpp
    int currentMenu = 0;
    void navigateMenu(int direction) {
-     // Handle menu navigation
+     // change currentMenu, then redraw
    }
    ```
 
-2. **Add Menu Functions**:
-   - Click menu item to execute corresponding operation
-   - Add submenus
+2. **Make items do something** — run an action when an item is chosen, or open a submenu.
 
-3. **Optimize Visual Effects**:
-   - Add icons
-   - Add animation effects
-   - Improve highlight style
+3. **Polish it** — add icons, animation, or a nicer highlight style.
 
 ## Frequently Asked Questions
 
-**Q: How to change number of menu items?**
-- Modify `menuItems` and `menuColors` array size
-- Adjust loop count and spacing
+**Q: How do I change the number of menu items?**
+- Edit the `menuItems` and `menuColors` arrays, then update the loop count and spacing to match.
 
-**Q: How to implement menu scrolling?**
-- Use offset to adjust menu item positions
-- Only display visible menu items
+**Q: How do I scroll a long menu?**
+- Track an offset and only draw the items that fit on screen, shifting the list as the
+  selection moves.
 
 ## Next Step
 
-After completing this course, you can:
-- Create your own menu system
-- Add menu interaction functions
-- Implement multi-level menus
+- [Lesson 09: Data Monitoring Interface](../Lesson09_DataMonitoring/README.md) — build a dashboard with cards.

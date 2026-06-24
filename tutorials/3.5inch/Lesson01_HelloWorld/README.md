@@ -2,131 +2,139 @@
 
 ## Course Objectives
 
-Learn how to display text on a 3.5-inch TFT-LCD screen, the first step in using the display.
+Show your very first text on the 3.5-inch TFT-LCD screen. This is the "hello world" of
+displays — once it works, you know your wiring and software are correct, and you're ready
+for everything else.
 
 ## Key Concepts
 
-### 1. Display Initialization
+### 1. Initializing the display
 
-Before displaying any content, you need to initialize the display:
+Before you can draw anything, the display needs to be set up. The sketch does three things:
+turn on the backlight, reset the display chip, then start the graphics library.
 
 ```cpp
-// Initialize backlight (On/Off only)
+// Turn on the backlight (on/off only — no dimming)
 pinMode(TFT_BACKLIGHT, OUTPUT);
-digitalWrite(TFT_BACKLIGHT, HIGH);  // ON
+digitalWrite(TFT_BACKLIGHT, HIGH);  // HIGH = ON on the 3.5-inch panel
 
-// Reset display
+// Reset the display
 pinMode(TFT_RST, OUTPUT);
 digitalWrite(TFT_RST, LOW);
 delay(10);
 digitalWrite(TFT_RST, HIGH);
 delay(120);
 
-// Initialize LCD
+// Start the graphics library
 if (!gfx->begin()) {
     Serial.println("LCD initialization failed!");
     while (1);
 }
 ```
 
-**Backlight Control Notes**:
-- 3.5-inch: On/Off only, `digitalWrite(TFT_BACKLIGHT, HIGH)`=ON (0.96-inch: LOW=ON)
-- Use `pinMode(TFT_BACKLIGHT, OUTPUT)` and `digitalWrite()`, no brightness level
+**About the backlight:**
+- It's simple on/off — there's no brightness control.
+- On the 3.5-inch panel, `HIGH` turns the backlight on. (The 0.96-inch module is the
+  opposite: `LOW` turns it on.)
+- You don't need to know the exact GPIO number — the sketch picks it automatically based on
+  your board. It's referred to in code as `TFT_BACKLIGHT` (GPIO 41 on ESP32-S3, GPIO 32 on
+  classic ESP32).
 
-### 2. Set Text Color
+### 2. Setting the text color
 
-Use the `setTextColor()` function to set text color:
+`setTextColor()` chooses the color the next text will be drawn in:
 
 ```cpp
-gfx->setTextColor(WHITE);  // Set text color to white
+gfx->setTextColor(WHITE);  // White text
 ```
 
-Common predefined colors:
-- `BLACK` - Black
-- `WHITE` - White
-- `RED` - Red
-- `GREEN` - Green
-- `BLUE` - Blue
-- `YELLOW` - Yellow
-- `MAGENTA` - Magenta
-- `CYAN` - Cyan
+These color names are built in and ready to use:
 
-### 3. Set Cursor Position
+- `BLACK`
+- `WHITE`
+- `RED`
+- `GREEN`
+- `BLUE`
+- `YELLOW`
+- `MAGENTA`
+- `CYAN`
 
-Use `setCursor(x, y)` to set text display position:
+### 3. Setting the cursor position
+
+The **cursor** is where the next text will start. `setCursor(x, y)` moves it:
 
 ```cpp
-gfx->setCursor(50, 200);  // x=50, y=200
+gfx->setCursor(50, 200);  // Start text at x=50, y=200
 ```
 
-**Coordinate System Notes**:
-- Origin (0, 0) is at the top-left corner
-- X-axis increases to the right (0 to 319)
-- Y-axis increases downward (0 to 479)
-- 3.5-inch display resolution: 320x480 pixels
+**How coordinates work:**
+- The origin `(0, 0)` is the **top-left** corner.
+- **x** increases to the right (0 to 319).
+- **y** increases downward (0 to 479).
+- The 3.5-inch display is 320 × 480 pixels.
 
-### 4. Set Text Size
+### 4. Setting the text size
 
-Use `setTextSize()` to set text size:
+`setTextSize()` scales the text. The display is large, so a bigger size like 3 looks great:
 
 ```cpp
-gfx->setTextSize(3);  // Set text size to 3 (3.5-inch display is large, suitable for larger fonts)
+gfx->setTextSize(3);
 ```
 
-### 5. Display Text
+### 5. Printing text
 
-Use `println()` or `print()` to display text:
+`println()` prints text and moves to the next line. `print()` prints without a newline:
 
 ```cpp
-gfx->println("Hello World");  // Display text with newline
-gfx->print("Hello");          // Display text without newline
+gfx->println("Hello World");  // Print, then move to next line
+gfx->print("Hello");          // Print, stay on same line
 ```
 
 ## Code Explanation
 
-Core parts of this lesson's code:
+The heart of this lesson is just four lines: pick a color, pick a spot, pick a size, print.
 
 ```cpp
-// Set text color to white
+// White text
 gfx->setTextColor(WHITE);
 
-// Set cursor position to (50, 200)
+// Start at (50, 200)
 gfx->setCursor(50, 200);
 
-// Set text size
+// Make it large
 gfx->setTextSize(3);
 
-// Display "Hello World"
+// Print it
 gfx->println("Hello World");
 ```
 
 ## Expected Result
 
-After uploading the code, the display should show:
-- Black background
-- Large white text "Hello World" displayed in the center area of the screen
+After uploading, the screen shows:
+- A black background
+- Large white text reading **Hello World** around the middle of the screen
 
 ## Extended Exercises
 
-1. **Change Text Position**: Try displaying text at different positions
+1. **Move the text** — try different coordinates:
    ```cpp
-   gfx->setCursor(100, 100);  // Try different coordinates
+   gfx->setCursor(100, 100);
    ```
 
-2. **Change Text Color**: Try using different colors
+2. **Change the color**:
    ```cpp
-   gfx->setTextColor(RED);  // Try red
-   gfx->setTextColor(GREEN);  // Try green
+   gfx->setTextColor(RED);
+   gfx->setTextColor(GREEN);
    ```
 
-3. **Change Text Size**: Try different text sizes
+3. **Change the size**:
    ```cpp
    gfx->setTextSize(1);  // Small
    gfx->setTextSize(2);  // Medium
    gfx->setTextSize(4);  // Large
    ```
 
-4. **Display Multiple Lines**: Try displaying multiple lines of text
+4. **Print multiple lines**:
    ```cpp
    gfx->setCursor(50, 100);
    gfx->println("Line 1");
@@ -134,7 +142,7 @@ After uploading the code, the display should show:
    gfx->println("Line 2");
    ```
 
-5. **Backlight On/Off**: Turn backlight off when not needed to save power
+5. **Turn the backlight off** to save power when the screen isn't needed:
    ```cpp
    digitalWrite(TFT_BACKLIGHT, LOW);   // OFF
    digitalWrite(TFT_BACKLIGHT, HIGH);  // ON
@@ -142,24 +150,25 @@ After uploading the code, the display should show:
 
 ## Frequently Asked Questions
 
-**Q: Display shows nothing?**
-- Check if backlight pinMode and digitalWrite are correct
-- Check if hardware connections are correct
-- Check serial output for error messages
+**Q: The screen is blank.**
+- Make sure the sketch turns the backlight on (`digitalWrite(TFT_BACKLIGHT, HIGH)`).
+- Double-check your wiring, especially the **DC** and **RST** pins.
+- Open the Serial Monitor and look for an error message.
 
-**Q: Text position is incorrect?**
-- Confirm coordinate values are within screen range (x: 0-319, y: 0-479)
-- Note that coordinate origin is at top-left corner
+**Q: The text is in the wrong place.**
+- Keep coordinates on screen: x from 0 to 319, y from 0 to 479.
+- Remember the origin `(0, 0)` is the top-left corner.
 
-**Q: Text color is incorrect?**
-- Confirm correct color constants are used
-- Check if text color is set before displaying
+**Q: The text color is wrong.**
+- Make sure you used one of the color names listed above.
+- Set the color *before* you print the text.
 
-**Q: Backlight is not on?**
-- Check if `digitalWrite(TFT_BACKLIGHT, HIGH)` has been executed (0.96-inch: use LOW)
-- Check if GPIO 41 connection is correct
+**Q: The backlight won't turn on.**
+- Confirm the sketch runs `digitalWrite(TFT_BACKLIGHT, HIGH)` (on the 0.96-inch module,
+  use `LOW` instead).
+- Check that the backlight pin is wired (GPIO 41 on ESP32-S3, GPIO 32 on classic ESP32).
 
 ## Next Step
 
-After completing this lesson, you can continue with:
-- [Lesson 02: Colors](../Lesson02_Colors/README.md) - Learn more about color usage
+Nicely done — you've got text on the screen! Next:
+- [Lesson 02: Colors](../Lesson02_Colors/README.md) — learn to use color.

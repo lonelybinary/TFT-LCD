@@ -2,66 +2,71 @@
 
 ## Course Objectives
 
-Learn how to use colors on a 3.5-inch TFT-LCD display, including predefined colors and setting text colors.
+Learn to use color on the 3.5-inch TFT-LCD display — filling the whole screen with a color
+and choosing the color of your text.
 
 ## Key Concepts
 
-### 1. Predefined Colors
+### 1. The built-in colors
 
-Arduino GFX library provides the following predefined color constants:
+The Arduino GFX library gives you these ready-made color names. You can use them anywhere a
+color is expected:
 
 ```cpp
-BLACK    // Black
-WHITE    // White
-RED      // Red
-GREEN    // Green
-BLUE     // Blue
-YELLOW   // Yellow
-MAGENTA  // Magenta
-CYAN     // Cyan
+BLACK
+WHITE
+RED
+GREEN
+BLUE
+YELLOW
+MAGENTA
+CYAN
 ```
 
-Usage example:
+Example:
 ```cpp
-gfx->fillScreen(RED);        // Fill screen with red
-gfx->setTextColor(WHITE);    // Set text color to white
+gfx->fillScreen(RED);      // Paint the whole screen red
+gfx->setTextColor(WHITE);  // Make text white
 ```
 
-### 2. Fill Screen Color
+### 2. Filling the screen
 
-Use the `fillScreen()` function to fill the entire screen with a specified color:
+`fillScreen()` paints the entire display one color. It's also the easiest way to "clear" the
+screen before drawing something new:
 
 ```cpp
-gfx->fillScreen(BLACK);  // Fill screen with black (clear screen)
-gfx->fillScreen(RED);    // Fill screen with red
+gfx->fillScreen(BLACK);  // Clear to black
+gfx->fillScreen(RED);    // Paint everything red
 ```
 
-### 3. Set Text Color
+### 3. Setting the text color
 
-Use the `setTextColor()` function to set text color:
+`setTextColor()` sets the color of the text you print next:
 
 ```cpp
-gfx->setTextColor(RED);    // Set text color to red
-gfx->setTextColor(WHITE);  // Set text color to white
+gfx->setTextColor(RED);
+gfx->setTextColor(WHITE);
 ```
 
 ## Code Explanation
 
-### Predefined Color Demo
+### Cycling through colors
+
+This loops through several colors, holding each one on screen for 2 seconds:
 
 ```cpp
-// Fill screen with different colors sequentially
 gfx->fillScreen(RED);
 delay(2000);
 gfx->fillScreen(GREEN);
 delay(2000);
-// ... other colors
+// ... and so on
 ```
 
-### Display Color Names
+### Showing the color names
+
+Here each color name is printed in its matching color:
 
 ```cpp
-// Display color names in their corresponding colors
 gfx->setTextColor(RED);
 gfx->setCursor(50, 20);
 gfx->println("RED");
@@ -69,28 +74,28 @@ gfx->println("RED");
 
 ## Expected Result
 
-1. **Predefined Color Demo**: Display shows red, green, blue, yellow, magenta, cyan, white, black sequentially (each color stays for 2 seconds)
-2. **Color Name List**: Display various color names in their corresponding colors on black background
+1. **Color cycle**: the screen fills with red, green, blue, yellow, magenta, cyan, white,
+   and black in turn (each for 2 seconds).
+2. **Color list**: the color names appear on a black background, each drawn in its own color.
 
 ## Extended Exercises
 
-1. **Change Color Order**: Try displaying colors in different order
+1. **Change the order** the colors appear in:
    ```cpp
-   // Try different color order
    gfx->fillScreen(BLUE);
    delay(2000);
    gfx->fillScreen(YELLOW);
    delay(2000);
    ```
 
-2. **Change Text Color**: Try displaying text in different colors
+2. **Print text in a different color**:
    ```cpp
    gfx->setTextColor(CYAN);
    gfx->setCursor(50, 50);
    gfx->println("CYAN TEXT");
    ```
 
-3. **Combine Usage**: Display text after filling with color
+3. **Combine a fill and text** — fill the screen, then write on top:
    ```cpp
    gfx->fillScreen(RED);
    gfx->setTextColor(WHITE);
@@ -99,52 +104,46 @@ gfx->println("RED");
    gfx->println("RED");
    ```
 
-## Important Notes
+## Going Deeper: How colors are stored
 
-### IPS Parameter Setting
+You don't have to memorize this, but it's good to know why the screen is called "16-bit".
 
-According to the display specification, the 3.5-inch display is an **IPS TFT-LCD** (IPS display), so the IPS parameter should be set to `true`:
+Each color is stored as a 16-bit number in a format called **RGB565** — 5 bits for red,
+6 for green, 5 for blue. The built-in names like `RED` are just convenient shortcuts for
+these numbers. You can save a color in a variable to reuse it:
+
+```cpp
+uint16_t myColor = RED;     // Store a color
+gfx->setTextColor(myColor); // Use it later
+```
+
+And you can mix your own color with `color565(r, g, b)` (we use this in later lessons):
+
+```cpp
+uint16_t orange = gfx->color565(255, 128, 0);  // r, g, b each 0–255
+```
+
+### A note on the IPS setting
+
+This panel is IPS, so the sketch creates the display with the IPS option set to `true`:
 
 ```cpp
 Arduino_ST7796 *gfx = new Arduino_ST7796(bus, TFT_RST, 0, true /* IPS */, 320, 480, 0, 0, 0, 0);
 ```
 
-#### IPS Parameter Differences
-
-**IPS Parameter Function**:
-- Controls display initialization command sequence
-- Affects color display correctness
-- Adapts to different display modes
-
-**`true` (IPS, Normally white)**:
-- Suitable for **IPS displays** or **Normally white mode** displays (display white when no signal)
-- Usually better viewing angle and more accurate colors
-- 3.5-inch display is IPS, should use `true`
-- If set to `false`, may cause color inversion or display abnormalities
-
-**How to Determine Which Value to Use**:
-1. **Check Specification**: If it says "IPS" or "Normally white", use `true`; if it says "Normally black", use `false`
-2. **Test Method**: If colors are incorrect, try switching `true`/`false` to test
-3. **Observe Effect**: With correct setting, colors should display normally (red is red, not blue)
-
-**Common Display IPS Settings**:
-- 0.96-inch (ST7735S, Normally black): `false`
-- 2.0-inch (ST7789, IPS): `true`
-- 2.4-inch (ST7789, IPS): `true`
-- 2.8-inch (ST7789, IPS): `true`
-- 3.5-inch (ST7796, IPS): `true` ✅
+You don't need to change this. It just tells the driver the correct startup sequence so
+colors come out right. If red ever shows up as blue (colors look inverted), this setting is
+the first thing to check.
 
 ## Frequently Asked Questions
 
-**Q: Why do colors look incorrect?**
-- Check if IPS parameter is correctly set to `true` (for 3.5-inch display)
-- Confirm using `Arduino_ST7796` class
+**Q: Why do the colors look wrong?**
+- Make sure the IPS option is set to `true` for this 3.5-inch panel.
+- Confirm you're using the `Arduino_ST7796` driver class.
 
-**Q: Can I store color values?**
-- Yes, use `uint16_t` type to store color values
-- Example: `uint16_t myColor = RED;`
+**Q: Can I save a color in a variable?**
+- Yes. Colors are `uint16_t` values, so: `uint16_t myColor = RED;`
 
 ## Next Step
 
-After completing this lesson, you can continue with:
-- [Lesson 03: Text Size](../Lesson03_TextSize/README.md) - Learn text size control
+- [Lesson 03: Text Size](../Lesson03_TextSize/README.md) — learn to make text bigger and smaller.

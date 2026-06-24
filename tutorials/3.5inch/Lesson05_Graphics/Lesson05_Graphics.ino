@@ -10,25 +10,63 @@
  * - Draw circles
  * - Filled shapes
  * 
- * Library Dependencies:
- * - Arduino GFX Library (moononournation/GFX Library for Arduino@1.6.4)
+ * Library needed (install once via Tools -> Manage Libraries):
+ * - "GFX Library for Arduino" by moononournation. Any recent version works.
+ *
+ * Before uploading, pick your board in Arduino IDE under Tools -> Board:
+ * "ESP32S3 Dev Module" for an ESP32-S3, or "ESP32 Dev Module" for a classic ESP32.
  */
 
 #include <Arduino_GFX_Library.h>
 
-// ==================== SPI LCD Pin Definitions ====================
-#define TFT_CS    10
-#define TFT_RST   42
-#define TFT_DC    2
-#define TFT_MOSI  11
-#define TFT_SCLK  12
-#define TFT_BACKLIGHT 41
+// ==================== Color Name Compatibility ====================
+// GFX Library 1.6.5+ renamed the short color macros (BLACK, RED, ...) to RGB565_*.
+// These aliases keep the sketch compiling on both old (<=1.6.4) and new (>=1.6.5)
+// versions. The #ifndef guard makes it a no-op on versions that still define BLACK.
+#ifndef BLACK
+  #define BLACK   RGB565_BLACK
+  #define WHITE   RGB565_WHITE
+  #define RED     RGB565_RED
+  #define GREEN   RGB565_GREEN
+  #define BLUE    RGB565_BLUE
+  #define YELLOW  RGB565_YELLOW
+  #define MAGENTA RGB565_MAGENTA
+  #define CYAN    RGB565_CYAN
+#endif
 
-// ==================== LCD Object ====================
-// Note: For other screen sizes, see the test program for each size
-// e.g. 0.96 inch: 0.96inch/code/0.96inch_Test/0.96inch_Test.ino
-// See ADAPTATION_GUIDE.md in each screen folder for adaptation details
-Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, TFT_SCLK, TFT_MOSI, GFX_NOT_DEFINED, 1, true);
+
+// ==================== SPI LCD Pin Definitions ====================
+// This kit ships wired for ESP32-S3, but the display module's ribbon cable works
+// with any board. Pins are selected automatically based on the board you choose
+// in Arduino IDE (Tools -> Board), so the same sketch compiles on both.
+#if defined(CONFIG_IDF_TARGET_ESP32S3)
+  // ESP32-S3 (select "ESP32S3 Dev Module") - default wiring for this kit
+  #define TFT_CS    10   // CS  (Chip Select)
+  #define TFT_RST   42   // RESET
+  #define TFT_DC    2    // DC/RS/A0 (Data/Command) - **Must connect!**
+  #define TFT_MOSI  11   // SDA/MOSI (SPI data)
+  #define TFT_SCLK  12   // SCL/SCLK (SPI clock)
+  #define TFT_BACKLIGHT 41  // LEDA/BLK (Backlight)
+  #define TFT_USE_PSRAM true
+#else
+  // Classic ESP32 (e.g. Lonely Binary PinPulse, select "ESP32 Dev Module")
+  // NOTE: GPIO 41/42 do not exist on classic ESP32, and GPIO 6-11 are reserved for
+  // the on-chip SPI flash, so the S3 pins above cannot be used. These are the
+  // standard VSPI pins for classic ESP32.
+  #define TFT_CS    15   // CS  (Chip Select)
+  #define TFT_RST   4    // RESET
+  #define TFT_DC    2    // DC/RS/A0 (Data/Command) - **Must connect!**
+  #define TFT_MOSI  23   // SDA/MOSI (SPI data, VSPI default)
+  #define TFT_SCLK  18   // SCL/SCLK (SPI clock, VSPI default)
+  #define TFT_BACKLIGHT 32  // LEDA/BLK (Backlight)
+  #define TFT_USE_PSRAM false
+#endif
+
+// ==================== Create the display object ====================
+// "bus" sets up HOW we talk to the screen (hardware SPI on the pins above).
+// "gfx" is the ST7796 screen driver (320x480) we call to draw text and shapes.
+// Using a different screen size? See ADAPTATION_GUIDE.md in that size's folder.
+Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, TFT_SCLK, TFT_MOSI, GFX_NOT_DEFINED, 1, TFT_USE_PSRAM /* use_psram (auto: PSRAM on S3, off on classic ESP32) */);
 Arduino_ST7796 *gfx = new Arduino_ST7796(bus, TFT_RST, 0, true /* IPS */, 320, 480, 0, 0, 0, 0);
 
 // ==================== Initialization ====================
@@ -39,9 +77,9 @@ void setup() {
   Serial.println("Lesson 05: Graphics");
   Serial.println("Initializing LCD...");
   
-  // Initialize backlight (On/Off only)
+  // Turn the backlight on (on/off only, no brightness control).
   pinMode(TFT_BACKLIGHT, OUTPUT);
-  digitalWrite(TFT_BACKLIGHT, HIGH);  // ON
+  digitalWrite(TFT_BACKLIGHT, HIGH);  // HIGH = backlight ON
   
   // Reset display
   pinMode(TFT_RST, OUTPUT);

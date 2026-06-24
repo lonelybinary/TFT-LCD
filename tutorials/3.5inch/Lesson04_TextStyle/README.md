@@ -2,45 +2,49 @@
 
 ## Course Objectives
 
-Learn how to set text styles, including foreground and background colors, creating various visual effects.
+Learn to style your text — giving it a background color and building useful effects like
+labels and highlights.
 
 ## Key Concepts
 
-### 1. Set Text Color
+### 1. Foreground and background colors
 
-#### Set Only Foreground Color (Text Color)
+#### Just the text color
 
 ```cpp
-gfx->setTextColor(WHITE);  // Set only text color
+gfx->setTextColor(WHITE);  // White text on whatever is already there
 ```
 
-Text will be displayed on the current screen background.
+The text is drawn over the current screen background.
 
-#### Set Both Foreground and Background Colors
+#### Text color *and* a background color
+
+Give `setTextColor()` two colors and it paints a background behind each character:
 
 ```cpp
 gfx->setTextColor(foreground, background);
-gfx->setTextColor(WHITE, RED);  // White text, red background
+gfx->setTextColor(WHITE, RED);  // White text on a red background
 ```
 
-**Parameter Description**:
-- First parameter: Foreground color (text color)
-- Second parameter: Background color (text background)
+- **First color**: the text itself (foreground).
+- **Second color**: the background behind the text.
 
-### 2. Color Combination Principles
+### 2. Choosing readable color combinations
 
-#### High Contrast Combinations (Recommended)
-- White text + Black background
-- Black text + White background
-- Yellow text + Blue background
+High contrast is easy to read; low contrast strains the eyes.
 
-#### Low Contrast Combinations (Not Recommended)
-- Light text + Light background
-- Dark text + Dark background
+**Good (high contrast):**
+- White text on black
+- Black text on white
+- Yellow text on blue
 
-### 3. Two Methods to Create Text Background
+**Avoid (low contrast):**
+- Light text on a light background
+- Dark text on a dark background
 
-#### Method 1: Use setTextColor to Set Background
+### 3. Two ways to put a background behind text
+
+#### Way 1: Let `setTextColor` do it
 
 ```cpp
 gfx->setTextColor(WHITE, RED);
@@ -48,33 +52,35 @@ gfx->setCursor(50, 30);
 gfx->println("Text");
 ```
 
-**Advantages**: Simple, automatically handles background
-**Disadvantages**: Background only covers text area
+**Pro:** simple — the background is handled for you.
+**Con:** the background only covers the text itself, with no padding.
 
-#### Method 2: Draw Background Rectangle First
+#### Way 2: Draw a rectangle first, then text on top
 
 ```cpp
-gfx->fillRect(20, 100, 150, 30, GREEN);  // Draw background
+gfx->fillRect(20, 100, 150, 30, GREEN);  // background box
 gfx->setTextColor(BLACK);
 gfx->setCursor(50, 110);
 gfx->println("Text");
 ```
 
-**Advantages**: Can control background size and position
-**Disadvantages**: Need to manually calculate position
+**Pro:** you control the exact size and position of the background.
+**Con:** you place the text yourself. (`fillRect` is covered fully in Lesson 5 — for now,
+the numbers are x, y, width, height, color.)
 
-### 4. Create Label Effect
+### 4. Building a label
 
-Labels are common UI elements that can be created by combining background and text colors:
+A **label** is a small colored box with text inside — a common UI element. Combine a filled
+rectangle with contrasting text:
 
 ```cpp
-// Success label (green background)
+// Success label (green box)
 gfx->fillRect(50, 50, 120, 35, GREEN);
 gfx->setTextColor(BLACK);
 gfx->setCursor(60, 60);
 gfx->println("SUCCESS");
 
-// Error label (red background)
+// Error label (red box)
 gfx->fillRect(50, 150, 120, 35, RED);
 gfx->setTextColor(WHITE);
 gfx->setCursor(60, 160);
@@ -83,39 +89,39 @@ gfx->println("ERROR");
 
 ## Code Explanation
 
-### Basic Text Color Setting
+### Text color, with and without a background
 
 ```cpp
-// Set only foreground color
+// Just the text color
 gfx->setTextColor(WHITE);
 gfx->println("White text");
 
-// Set foreground and background colors
+// Text color + background color
 gfx->setTextColor(WHITE, RED);
 gfx->println("White on Red");
 ```
 
-### Create Label
+### A label
 
 ```cpp
-// Draw background rectangle
+// Draw the background box
 gfx->fillRect(50, 50, 120, 35, GREEN);
 
-// Set text color
+// Set the text color
 gfx->setTextColor(BLACK);
 
-// Display text (note Y coordinate needs fine-tuning)
+// Place the text (nudge the y a little so it sits nicely inside)
 gfx->setCursor(60, 60);
 gfx->println("SUCCESS");
 ```
 
-### Text Highlight
+### A highlight row
 
 ```cpp
-// Draw highlight background
+// Highlight bar across the screen
 gfx->fillRect(0, 100, 320, 40, CYAN);
 
-// Display text
+// Text on top
 gfx->setTextColor(BLACK);
 gfx->setCursor(50, 110);
 gfx->println("Highlighted");
@@ -123,19 +129,18 @@ gfx->println("Highlighted");
 
 ## Expected Result
 
-1. **Foreground Color Demo**: Display text in different colors
-2. **Foreground + Background**: Display text with background color
-3. **Color Combinations**: Show various color combination effects
-4. **Text Area Background**: Demonstrate different background creation methods
-5. **Label Effects**: Create success, warning, error, info labels
-6. **Highlight Effect**: Create text highlight rows
+1. **Foreground colors**: text in several different colors.
+2. **Foreground + background**: text with a background color behind it.
+3. **Combinations**: various color pairings.
+4. **Background methods**: both ways of putting a background behind text.
+5. **Labels**: success, warning, error, and info labels.
+6. **Highlight**: a highlighted text row.
 
 ## Extended Exercises
 
-1. **Create Status Indicator**:
+1. **A status helper** (0 = success, 1 = warning, 2 = error):
    ```cpp
    void drawStatus(const char* text, int status, int x, int y) {
-     // status: 0=success(green), 1=warning(yellow), 2=error(red)
      uint16_t colors[] = {GREEN, YELLOW, RED};
      gfx->fillRect(x, y, 100, 40, colors[status]);
      gfx->setTextColor(BLACK);
@@ -144,34 +149,31 @@ gfx->println("Highlighted");
    }
    ```
 
-2. **Create Button Effect**:
+2. **A button helper**:
    ```cpp
    void drawButton(const char* text, int x, int y, int w, int h) {
-     // Draw button background
-     gfx->fillRect(x, y, w, h, BLUE);
-     // Draw border
-     gfx->drawRect(x, y, w, h, WHITE);
-     // Center display text
+     gfx->fillRect(x, y, w, h, BLUE);  // fill
+     gfx->drawRect(x, y, w, h, WHITE); // border
      gfx->setTextColor(WHITE);
-     // Calculate center position...
+     // ...center the text...
    }
    ```
 
 ## Frequently Asked Questions
 
-**Q: Background color not showing?**
-- Confirm using two-parameter `setTextColor(foreground, background)`
-- Check if background color is the same as screen background color
+**Q: My background color isn't showing.**
+- Use the two-color form: `setTextColor(foreground, background)`.
+- Check the background color isn't the same as the screen color.
 
-**Q: Text background size incorrect?**
-- `setTextColor` background only covers text area
-- If larger background is needed, use `fillRect()` to draw background first
+**Q: The background box is the wrong size.**
+- The `setTextColor` background only covers the text exactly. For a bigger box, draw it
+  yourself with `fillRect()` first.
 
-**Q: Text position doesn't match background?**
-- When using `fillRect()`, need to manually calculate text position
-- Y coordinate usually needs fine-tuning (+5 to +10 pixels, depending on text size)
+**Q: My text doesn't line up with its background box.**
+- When you use `fillRect()`, you position the text by hand.
+- Nudge the y coordinate down a few pixels (about +5 to +10, depending on text size) so the
+  text sits centered inside the box.
 
 ## Next Step
 
-After completing this lesson, you can continue with:
-- [Lesson 05: Graphics](../Lesson05_Graphics/README.md) - Learn graphics drawing
+- [Lesson 05: Graphics](../Lesson05_Graphics/README.md) — draw lines, rectangles, and circles.
