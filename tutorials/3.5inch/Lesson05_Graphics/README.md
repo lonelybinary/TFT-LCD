@@ -2,111 +2,93 @@
 
 ## Course Objectives
 
-Learn how to draw basic graphics, including lines, rectangles, circles, etc., and how to create simple UI elements.
+Learn to draw shapes — lines, rectangles, circles, and triangles — and start combining them
+into simple UI pieces.
 
 ## Key Concepts
 
-### 1. Draw Lines
+### 1. Lines
 
-Use the `drawLine()` function to draw straight lines:
+`drawLine()` draws a straight line between two points:
 
 ```cpp
 gfx->drawLine(x1, y1, x2, y2, color);
 ```
 
-**Parameter Description**:
-- `x1, y1`: Start point coordinates
-- `x2, y2`: End point coordinates
-- `color`: Line color
+- `x1, y1`: where the line starts
+- `x2, y2`: where it ends
+- `color`: the line color
 
-**Example**:
 ```cpp
-// Horizontal line
-gfx->drawLine(20, 20, 300, 20, WHITE);
-
-// Vertical line
-gfx->drawLine(20, 20, 20, 460, RED);
-
-// Diagonal line
-gfx->drawLine(20, 20, 300, 460, GREEN);
+gfx->drawLine(20, 20, 300, 20, WHITE);   // horizontal
+gfx->drawLine(20, 20, 20, 460, RED);     // vertical
+gfx->drawLine(20, 20, 300, 460, GREEN);  // diagonal
 ```
 
-### 2. Draw Rectangles
+### 2. Rectangles
 
-#### Hollow Rectangle (Outline)
+Most shapes come in two flavors: **outlined** (just the border) and **filled** (solid).
+
+#### Outline only
 
 ```cpp
 gfx->drawRect(x, y, width, height, color);
 ```
 
-**Parameter Description**:
-- `x, y`: Top-left corner coordinates
-- `width`: Rectangle width
-- `height`: Rectangle height
-- `color`: Border color
+- `x, y`: the top-left corner
+- `width`, `height`: the size
+- `color`: the border color
 
-#### Filled Rectangle
+#### Filled
 
 ```cpp
 gfx->fillRect(x, y, width, height, color);
 ```
 
-**Example**:
 ```cpp
-// Hollow rectangle
-gfx->drawRect(20, 20, 80, 60, RED);
-
-// Filled rectangle
-gfx->fillRect(20, 20, 80, 60, RED);
+gfx->drawRect(20, 20, 80, 60, RED);  // outline
+gfx->fillRect(20, 20, 80, 60, RED);  // solid
 ```
 
-### 3. Draw Circles
+### 3. Circles
 
-#### Hollow Circle (Outline)
+#### Outline only
 
 ```cpp
 gfx->drawCircle(x, y, radius, color);
 ```
 
-**Parameter Description**:
-- `x, y`: Circle center coordinates
-- `radius`: Radius
-- `color`: Border color
+- `x, y`: the **center** of the circle
+- `radius`: how big it is
+- `color`: the color
 
-#### Filled Circle
+#### Filled
 
 ```cpp
 gfx->fillCircle(x, y, radius, color);
 ```
 
-**Example**:
 ```cpp
-// Hollow circle
-gfx->drawCircle(160, 200, 50, BLUE);
-
-// Filled circle
-gfx->fillCircle(160, 200, 50, BLUE);
+gfx->drawCircle(160, 200, 50, BLUE);  // outline
+gfx->fillCircle(160, 200, 50, BLUE);  // solid
 ```
 
-### 4. Draw Triangle
+### 4. Triangles
+
+`fillTriangle()` draws a solid triangle from three corner points:
 
 ```cpp
 gfx->fillTriangle(x1, y1, x2, y2, x3, y3, color);
 ```
 
-**Parameter Description**:
-- `x1, y1, x2, y2, x3, y3`: Coordinates of three vertices
-- `color`: Fill color
-
-**Example**:
 ```cpp
-// Play button (triangle)
+// A "play" button shape
 gfx->fillTriangle(50, 100, 50, 200, 150, 150, GREEN);
 ```
 
 ## Code Explanation
 
-### Basic Graphics Drawing
+### Basic shapes
 
 ```cpp
 // Line
@@ -121,42 +103,41 @@ gfx->drawCircle(160, 200, 50, BLUE);
 gfx->fillCircle(160, 200, 50, BLUE);
 ```
 
-### Create UI Elements
+### Combining shapes into UI
 
 ```cpp
-// Progress bar
-gfx->drawRect(20, 200, 280, 40, WHITE);  // Background frame
-gfx->fillRect(20, 200, 140, 40, GREEN); // Fill (50%)
+// Progress bar: an outlined frame with a filled bar inside
+gfx->drawRect(20, 200, 280, 40, WHITE);  // frame
+gfx->fillRect(20, 200, 140, 40, GREEN);  // 50% fill
 
-// Button
+// Button: a filled box with an outline
 gfx->fillRect(100, 300, 120, 60, BLUE);
 gfx->drawRect(100, 300, 120, 60, WHITE);
 ```
 
 ## Expected Result
 
-1. **Line Drawing**: Horizontal, vertical, diagonal lines
-2. **Rectangle Drawing**: Hollow and filled rectangles
-3. **Circle Drawing**: Hollow and filled circles
-4. **Combined Graphics**: Create simple icons (play, stop, circular buttons)
-5. **Grid Drawing**: Draw coordinate grid
-6. **Progress Bar**: Create progress bar UI element
-7. **Dynamic Drawing**: Moving circles and growing rectangles
+1. **Lines**: horizontal, vertical, and diagonal.
+2. **Rectangles**: outlined and filled.
+3. **Circles**: outlined and filled.
+4. **Combined shapes**: simple icons (play, stop, round buttons).
+5. **Grid**: a coordinate grid.
+6. **Progress bar**: a UI progress bar.
+7. **Animation**: a moving circle and a growing rectangle.
 
 ## Extended Exercises
 
-1. **Create Button Function**:
+1. **A button helper**:
    ```cpp
    void drawButton(const char* text, int x, int y, int w, int h) {
      gfx->fillRect(x, y, w, h, BLUE);
      gfx->drawRect(x, y, w, h, WHITE);
-     // Center display text...
+     // ...center the text...
    }
    ```
 
-2. **Draw Chart**:
+2. **A bar chart**:
    ```cpp
-   // Draw simple bar chart
    int values[] = {50, 80, 60, 90, 70};
    for (int i = 0; i < 5; i++) {
      int barHeight = values[i];
@@ -164,7 +145,7 @@ gfx->drawRect(100, 300, 120, 60, WHITE);
    }
    ```
 
-3. **Create Icon Library**:
+3. **An icon helper**:
    ```cpp
    void drawPlayIcon(int x, int y, int size) {
      gfx->fillTriangle(x, y, x, y + size, x + size, y + size/2, GREEN);
@@ -173,20 +154,18 @@ gfx->drawRect(100, 300, 120, 60, WHITE);
 
 ## Frequently Asked Questions
 
-**Q: How to draw rounded rectangle?**
-- Arduino GFX library doesn't directly support rounded rectangles
-- Can use multiple small rectangles or circles to simulate rounded corners
+**Q: How do I draw a rounded rectangle?**
+- The library doesn't have a built-in rounded rectangle here. You can fake the corners with
+  small filled circles, or just use a plain rectangle.
 
-**Q: How to draw ellipse?**
-- Arduino GFX library doesn't directly support ellipses
-- Can use multiple small circles or lines to approximate
+**Q: How do I draw an ellipse?**
+- There's no built-in ellipse. You can approximate one with several small circles or lines.
 
-**Q: Graphics drawing is slow?**
-- Using hardware SPI can speed up drawing
-- Reduce unnecessary screen clearing operations
-- Only update parts that need to change
+**Q: Drawing feels slow.**
+- These modules use hardware SPI, which is already fast.
+- Don't redraw the whole screen if only one part changed — just update that part.
+- Clear the screen less often.
 
 ## Next Step
 
-After completing this lesson, you can continue with:
-- [Lesson 06: Rotation](../Lesson06_Rotation/README.md) - Learn screen rotation
+- [Lesson 06: Rotation](../Lesson06_Rotation/README.md) — turn the screen sideways.

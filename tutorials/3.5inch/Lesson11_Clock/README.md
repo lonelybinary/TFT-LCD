@@ -2,163 +2,156 @@
 
 ## Course Objectives
 
-Learn to create a clock display interface and master analog clock drawing and digital time display.
+Build the final project: an **analog clock face**. You'll draw the circle, the tick marks,
+and the hands — using a little trigonometry to place things around a circle.
 
 ## Key Concepts
 
-### 1. Analog Clock Drawing
+### 1. Drawing the clock face
 
-#### Clock Outer Circle
-Use circle to draw clock outer circle:
+#### The outer circle
+Pick a center point and a radius, then draw a circle:
 
 ```cpp
-int centerX = 160;  // Screen width center
-int centerY = 240;  // Screen height center
-int radius = 100;   // Clock radius
+int centerX = 160;  // middle of the 320-wide screen
+int centerY = 240;  // middle of the 480-tall screen
+int radius = 100;   // clock size
 gfx->drawCircle(centerX, centerY, radius, WHITE);
 ```
 
-#### Clock Marks
-Use trigonometric functions to calculate mark positions:
+#### The 12 tick marks
+There are 12 marks evenly spaced around the circle. We use `sin()` and `cos()` to find each
+mark's position. Don't worry if the math feels new — the pattern below is all you need:
 
 ```cpp
 for (int i = 0; i < 12; i++) {
-  float angle = i * PI / 6 - PI / 2;  // 12 marks, each 30 degrees
-  int x1 = centerX + (radius - 5) * cos(angle);
+  float angle = i * PI / 6 - PI / 2;   // 12 steps around the circle
+  int x1 = centerX + (radius - 5) * cos(angle);   // outer end of the tick
   int y1 = centerY + (radius - 5) * sin(angle);
-  int x2 = centerX + (radius - 20) * cos(angle);
+  int x2 = centerX + (radius - 20) * cos(angle);  // inner end of the tick
   int y2 = centerY + (radius - 20) * sin(angle);
   gfx->drawLine(x1, y1, x2, y2, WHITE);
 }
 ```
 
-### 2. Hour and Minute Hands
+### 2. The hands
 
-#### Hour Hand (Pointing to 3 o'clock)
-Horizontal to the right:
+This example draws fixed hands (pointing to a set time) so you can see how they work.
+
+#### Hour hand — pointing to 3 o'clock (straight right)
 
 ```cpp
 gfx->drawLine(centerX, centerY, centerX + 40, centerY, RED);
 ```
 
-#### Minute Hand (Pointing to 12 o'clock)
-Vertical upward:
+#### Minute hand — pointing to 12 o'clock (straight up)
 
 ```cpp
 gfx->drawLine(centerX, centerY, centerX, centerY - 60, GREEN);
 ```
 
-### 3. Clock Center Point
+### 3. The center dot
 
-Use filled circle to draw center point:
+A small filled circle covers where the hands meet:
 
 ```cpp
 gfx->fillCircle(centerX, centerY, 5, WHITE);
 ```
 
-### 4. Digital Time Display
+### 4. A digital time too
 
-Display digital time below the clock:
+You can show a digital readout under the clock:
 
 ```cpp
 drawCenteredText("12:00", 380, WHITE, 3);
 ```
 
-### 5. Math Function Usage
+### 5. The math header
 
-Need to include `<math.h>` header file:
+`sin()` and `cos()` come from the math library, so include it at the top of the sketch:
 
 ```cpp
 #include <math.h>
 ```
 
-Use `cos()` and `sin()` functions to calculate angles.
-
 ## Code Explanation
 
-### Clock Mark Calculation
+### Placing the tick marks
 
 ```cpp
-// Clock marks (12 marks)
 for (int i = 0; i < 12; i++) {
-  float angle = i * PI / 6 - PI / 2;  // Convert to radians, -PI/2 makes 12 o'clock at top
-  int x1 = centerX + (radius - 5) * cos(angle);   // Outer mark endpoint
+  float angle = i * PI / 6 - PI / 2;  // -PI/2 puts mark 0 at the top (12 o'clock)
+  int x1 = centerX + (radius - 5) * cos(angle);   // outer point
   int y1 = centerY + (radius - 5) * sin(angle);
-  int x2 = centerX + (radius - 20) * cos(angle);  // Inner mark endpoint
+  int x2 = centerX + (radius - 20) * cos(angle);  // inner point
   int y2 = centerY + (radius - 20) * sin(angle);
   gfx->drawLine(x1, y1, x2, y2, WHITE);
 }
 ```
 
-### Hand Drawing
+### Drawing the hands
 
 ```cpp
-// Hour hand (pointing to 3 o'clock, horizontal to right)
+// Hour hand (to 3 o'clock — horizontal, right)
 gfx->drawLine(centerX, centerY, centerX + 40, centerY, RED);
 
-// Minute hand (pointing to 12 o'clock, vertical upward)
+// Minute hand (to 12 o'clock — vertical, up)
 gfx->drawLine(centerX, centerY, centerX, centerY - 60, GREEN);
 ```
 
 ## Expected Result
 
-Display clock interface, including:
-- White circular outer circle
-- 12 clock marks
-- Red hour hand (pointing to 3 o'clock)
-- Green minute hand (pointing to 12 o'clock)
-- White center point
-- Digital time display (12:00)
+A clock screen showing:
+- A white circle
+- 12 tick marks
+- A red hour hand (pointing to 3)
+- A green minute hand (pointing to 12)
+- A white center dot
+- A digital time (12:00) below
 
 ## Extended Exercises
 
-1. **Implement Real-Time Clock**:
+1. **Make it tick** — compute the hand angles from the real time and redraw:
    ```cpp
    void updateClock() {
-     // Get current time
-     // Calculate hour and minute hand angles
-     // Update display
+     // get the current time
+     // work out the hour and minute angles
+     // redraw the hands
    }
    ```
 
-2. **Add Second Hand**:
-   - Draw second hand
-   - Update every second
+2. **Add a second hand** that updates every second.
 
-3. **Add Date Display**:
-   - Display date below clock
-   - Format date string
+3. **Add the date** below the clock.
 
 ## Frequently Asked Questions
 
-**Q: How to calculate hand angles?**
-- Hour hand angle: `hour * 30 + minute * 0.5` (30 degrees per hour)
-- Minute hand angle: `minute * 6` (6 degrees per minute)
-- Second hand angle: `second * 6` (6 degrees per second)
+**Q: How do I work out the hand angles from a time?**
+- Hour hand: `hour * 30 + minute * 0.5` (30° per hour, drifting as the minutes pass)
+- Minute hand: `minute * 6` (6° per minute)
+- Second hand: `second * 6` (6° per second)
 
-**Q: Why use `-PI/2`?**
-- Makes 12 o'clock position at top (negative Y direction)
-- Conforms to traditional clock layout
+**Q: Why subtract `PI/2`?**
+- It rotates everything so position 0 sits at the top (12 o'clock) instead of at 3 o'clock,
+  matching a real clock.
 
-**Q: How to implement hand rotation?**
-- Use `cos()` and `sin()` to calculate hand endpoint coordinates
-- Calculate angle based on time
+**Q: How do I make a hand point to an angle?**
+- Use the same `cos()`/`sin()` pattern as the tick marks to find the hand's end point, then
+  draw a line from the center to that point.
 
 ## Next Step
 
-After completing this course, you can:
-- Create real-time clock application
-- Add alarm function
-- Implement multi-timezone display
+There's no next lesson — this was the last one!
 
-## Tutorial Completion
+## Tutorial Complete
 
-Congratulations on completing all tutorials for the 3.5-inch TFT-LCD display! You have now mastered:
-- ✅ Display initialization and basic operations
-- ✅ Text display and style settings
-- ✅ Color usage and graphics drawing
-- ✅ Screen rotation and layout design
-- ✅ UI interface design and component creation
-- ✅ Practical application case development
+Congratulations — you've finished all 11 lessons for the 3.5-inch TFT-LCD display! You can now:
+- ✅ Initialize the display and do the basics
+- ✅ Show text and style it
+- ✅ Use colors and draw shapes
+- ✅ Rotate the screen and plan layouts
+- ✅ Build real interfaces: info screens, menus, dashboards, notifications, and a clock
+- ✅ Wrap common drawing code into reusable helper functions
 
-Keep exploring and create your own amazing projects! 🚀
+Keep going — connect a sensor, add a button, or adapt these lessons to a different display
+size. Have fun building your own projects! 🚀

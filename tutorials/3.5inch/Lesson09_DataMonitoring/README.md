@@ -2,55 +2,57 @@
 
 ## Course Objectives
 
-Learn to create a data monitoring interface and master card-style layout and data visualization.
+Build a **dashboard** that shows several readings at once using "card" panels, with progress
+bars to make the numbers easy to read at a glance.
 
 ## Key Concepts
 
-### 1. Card-Style Layout
+### 1. Card-style layout
 
-Use rectangular borders to create cards:
+A **card** is just a bordered panel that groups related info. Draw one with an outlined
+rectangle:
 
 ```cpp
 gfx->drawRect(30, 100, 120, 100, CYAN);
 ```
 
-#### Card Layout Principles
-- **Left-Right Arrangement**: Two cards displayed side by side
-- **Uniform Size**: Keep card sizes consistent
-- **Appropriate Spacing**: Leave spacing between cards
+#### Tips for cards
+- **Place them side by side** so several fit on screen.
+- **Keep them the same size** for a tidy look.
+- **Leave a gap** between cards.
 
-### 2. Data Visualization
+### 2. Showing data visually
 
-#### Progress Bar Display Percentage
-Use progress bar to visually display data:
+#### Progress bars
+A progress bar turns a number into an easy-to-read bar (we built this helper in Lesson 7):
 
 ```cpp
 drawProgressBar(40, 170, 100, 15, 45, CYAN, GREEN);
 ```
 
-#### Large Font Display Values
-Use larger font to highlight data:
+#### Big numbers
+Use a larger text size to make the headline value stand out:
 
 ```cpp
 gfx->setTextSize(3);
 gfx->println("45%");
 ```
 
-### 3. Multi-Card Design
+### 3. Multiple cards
 
 #### Card 1 (CPU)
-- Position: Left side (x=30)
-- Border color: CYAN
-- Data: 45%
+- Position: left side (x = 30)
+- Border: `CYAN`
+- Value: 45%
 
 #### Card 2 (MEM)
-- Position: Right side (x=170)
-- Border color: YELLOW
-- Data: 62%
+- Position: right side (x = 170)
+- Border: `YELLOW`
+- Value: 62%
 
-### 4. Status Indication
+### 4. An overall status
 
-Use label to display overall status:
+A single label can summarize how things are doing:
 
 ```cpp
 drawLabel("OK", 150, 225, GREEN, BLACK, 2);
@@ -58,23 +60,26 @@ drawLabel("OK", 150, 225, GREEN, BLACK, 2);
 
 ## Code Explanation
 
-### Card Drawing
+### Drawing one card
 
 ```cpp
-// Data card 1 (left side)
-gfx->drawRect(30, 100, 120, 100, CYAN);
+// CPU card (left side)
+gfx->drawRect(30, 100, 120, 100, CYAN);  // card border
+
 gfx->setTextColor(CYAN);
 gfx->setTextSize(2);
 gfx->setCursor(40, 110);
-gfx->println("CPU");
+gfx->println("CPU");           // card title
+
 gfx->setTextColor(WHITE);
 gfx->setTextSize(3);
 gfx->setCursor(40, 140);
-gfx->println("45%");
-drawProgressBar(40, 170, 100, 15, 45, CYAN, GREEN);
+gfx->println("45%");           // big value
+
+drawProgressBar(40, 170, 100, 15, 45, CYAN, GREEN);  // bar
 ```
 
-### Progress Bar Visualization
+### The progress-bar helper
 
 ```cpp
 void drawProgressBar(int x, int y, int width, int height, int percent, uint16_t bgColor, uint16_t fillColor) {
@@ -88,44 +93,33 @@ void drawProgressBar(int x, int y, int width, int height, int percent, uint16_t 
 
 ## Expected Result
 
-Display data monitoring interface, including:
-- Title and separator
-- CPU usage card (45%)
-- Memory usage card (62%)
-- Status indicator (OK)
+A dashboard showing:
+- A title and separator
+- A CPU card (45%)
+- A memory card (62%)
+- An overall status label (OK)
 
 ## Extended Exercises
 
-1. **Add More Data Cards**:
-   - Disk usage
-   - Network traffic
-   - Temperature monitoring
+1. **Add more cards** — disk usage, network traffic, temperature.
 
-2. **Implement Real-Time Updates**:
+2. **Update the data live**:
    ```cpp
    void updateMonitoringData() {
-     // Update CPU, memory, etc. data
+     // re-read CPU, memory, etc., then redraw the cards
    }
    ```
 
-3. **Add Chart Display**:
-   - Line chart
-   - Bar chart
-   - Pie chart
+3. **Add a chart** — a line chart, bar chart, or simple gauge.
 
 ## Frequently Asked Questions
 
-**Q: How to adjust card size?**
-- Modify width and height parameters in `drawRect` function
-- Ensure content fits card size
+**Q: How do I resize a card?**
+- Change the width and height in its `drawRect()` call, and make sure the contents still fit.
 
-**Q: How to add more cards?**
-- Calculate card positions (consider screen width)
-- Can create multi-row layout
+**Q: How do I fit more cards?**
+- Plan their x/y positions around the screen width. You can also stack cards in rows.
 
 ## Next Step
 
-After completing this course, you can:
-- Create your own monitoring interface
-- Combine with sensors to display real-time data
-- Implement data recording and display
+- [Lesson 10: Notification Interface](../Lesson10_Notification/README.md) — build a notification card.

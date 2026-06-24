@@ -2,41 +2,35 @@
 
 ## Course Objectives
 
-Learn how to rotate the display orientation and understand the impact of different rotation angles on display effects.
+Learn to rotate the display so you can use it in landscape as well as portrait, and
+understand how rotating changes the coordinate system.
 
 ## Key Concepts
 
-### 1. Set Rotation Angle
+### 1. Setting the rotation
 
-Use the `setRotation(angle)` function to set screen rotation angle:
+`setRotation(angle)` turns the display. There are four settings, 0 to 3:
 
 ```cpp
-gfx->setRotation(0);  // 0 degrees (default, portrait)
-gfx->setRotation(1);  // 90 degrees (clockwise)
-gfx->setRotation(2);  // 180 degrees
-gfx->setRotation(3);  // 270 degrees (counterclockwise 90 degrees)
+gfx->setRotation(0);  // 0° — portrait (default)
+gfx->setRotation(1);  // 90° clockwise — landscape
+gfx->setRotation(2);  // 180° — upside-down portrait
+gfx->setRotation(3);  // 270° — landscape the other way
 ```
 
-**Rotation Angle Description**:
-- **0 degrees (rotation = 0)**: Default direction, portrait mode
-  - Width: 320 pixels, Height: 480 pixels
-  - Origin at top-left corner
-  
-- **90 degrees (rotation = 1)**: Clockwise rotation 90 degrees
-  - Width: 480 pixels, Height: 320 pixels
-  - Origin at top-right corner (from user's perspective)
-  
-- **180 degrees (rotation = 2)**: Rotation 180 degrees
-  - Width: 320 pixels, Height: 480 pixels
-  - Origin at bottom-right corner
-  
-- **270 degrees (rotation = 3)**: Counterclockwise 90 degrees (or clockwise 270 degrees)
-  - Width: 480 pixels, Height: 320 pixels
-  - Origin at bottom-left corner
+What each one gives you:
 
-### 2. Rotation Impact on Screen Dimensions
+- **0 (portrait)**: 320 wide × 480 tall. Origin at the top-left.
+- **1 (landscape)**: 480 wide × 320 tall.
+- **2 (portrait, flipped)**: 320 wide × 480 tall.
+- **3 (landscape, flipped)**: 480 wide × 320 tall.
 
-After rotation, `width()` and `height()` values change:
+Notice that rotations 1 and 3 are **landscape**, so the screen becomes wider than it is tall.
+
+### 2. Rotation swaps width and height
+
+After a 90° or 270° rotation, `width()` and `height()` swap. Always read them after setting
+the rotation:
 
 ```cpp
 gfx->setRotation(0);
@@ -48,132 +42,112 @@ int w1 = gfx->width();   // 480
 int h1 = gfx->height();  // 320
 ```
 
-**Important**: When rotating 90 or 270 degrees, width and height are swapped.
+### 3. Rotation changes where (0,0) is
 
-### 3. Rotation Impact on Coordinate System
-
-After rotation, the coordinate system also changes:
+The origin `(0, 0)` is always the top-left of the screen *as you're now looking at it*. So
+the same `setCursor(0, 0)` lands in a different physical corner after you rotate:
 
 ```cpp
-// Rotation 0: (0,0) at top-left corner
 gfx->setRotation(0);
-gfx->setCursor(0, 0);  // Top-left corner
+gfx->setCursor(0, 0);  // top-left in portrait
 
-// Rotation 1: (0,0) at top-right corner (from user's perspective)
 gfx->setRotation(1);
-gfx->setCursor(0, 0);  // Top-right corner
-
-// Rotation 2: (0,0) at bottom-right corner
-gfx->setRotation(2);
-gfx->setCursor(0, 0);  // Bottom-right corner
-
-// Rotation 3: (0,0) at bottom-left corner
-gfx->setRotation(3);
-gfx->setCursor(0, 0);  // Bottom-left corner
+gfx->setCursor(0, 0);  // top-left of the rotated (landscape) view
 ```
 
-### 4. When to Use Rotation
+The practical takeaway: **after you rotate, recalculate your positions.**
 
-**Use Cases**:
-- Need landscape display (rotation = 1 or 3)
-- Device installation direction changes
-- Adapt to different display requirements
+### 4. When to use rotation
 
-**Notes**:
-- Need to recalculate positions after rotation
-- Text and graphics positions will change
-- Recommend setting rotation immediately after initialization
+**Good reasons:**
+- You want a landscape layout (use 1 or 3).
+- Your device is mounted sideways or upside-down.
+
+**Keep in mind:**
+- Text and shapes will land in new spots, so plan positions after rotating.
+- It's easiest to call `setRotation()` once, right after initializing, and stick with it.
 
 ## Code Explanation
 
-### Basic Rotation Setting
+### Setting a rotation and drawing
 
 ```cpp
-// Set rotation angle
-gfx->setRotation(1);  // 90 degrees
-
-// Clear screen
+gfx->setRotation(1);   // landscape
 gfx->fillScreen(BLACK);
 
-// Display content (coordinate system has changed)
 gfx->setCursor(50, 50);
 gfx->println("Rotated");
 ```
 
-### Dynamic Rotation Demo
+### Cycling through all four
 
 ```cpp
 for (int rotation = 0; rotation < 4; rotation++) {
   gfx->setRotation(rotation);
   gfx->fillScreen(BLACK);
-  
-  // Display rotation information
+
   gfx->setTextColor(WHITE);
   gfx->setTextSize(3);
   gfx->setCursor(50, 50);
   gfx->print("Rot: ");
   gfx->println(rotation);
-  
+
   delay(3000);
 }
 ```
 
 ## Expected Result
 
-1. **All Rotation Angles**: Display four rotation angles 0, 1, 2, 3 sequentially
-2. **Coordinate Axis Display**: Display X and Y axes, mark origin
-3. **Same Content Different Angles**: Display same text at different rotation angles
-4. **Graphics Rotation**: Display graphics effects at different rotation angles
-5. **Angle Description**: Display rotation angle reference table
+1. **All four rotations**: 0, 1, 2, 3 shown in turn.
+2. **Axes**: the x and y axes drawn with the origin marked.
+3. **Same text, different angles**: the same text at each rotation.
+4. **Shapes**: shapes shown at each rotation.
+5. **Reference**: a small table of rotation angles.
 
 ## Extended Exercises
 
-1. **Adaptive Layout**:
+1. **Layout that adapts to rotation**:
    ```cpp
-   // Automatically adjust layout based on rotation angle
    void drawAdaptiveLayout() {
      int w = gfx->width();
      int h = gfx->height();
-     // Adjust layout based on w and h...
+     // ...lay things out based on w and h...
    }
    ```
 
-2. **Portrait/Landscape Switching**:
+2. **Detect portrait vs. landscape**:
    ```cpp
-   // Implement automatic portrait/landscape switching
    bool isLandscape = (gfx->width() > gfx->height());
    if (isLandscape) {
-     // Landscape layout
+     // landscape layout
    } else {
-     // Portrait layout
+     // portrait layout
    }
    ```
 
-3. **Rotation Animation**:
+3. **Step through rotations as an animation**:
    ```cpp
-   // Implement smooth rotation animation effect
    for (int r = 0; r < 4; r++) {
      gfx->setRotation(r);
-     // Display content...
+     // ...draw...
      delay(500);
    }
    ```
 
 ## Frequently Asked Questions
 
-**Q: Content position incorrect after rotation?**
-- Coordinate system changes after rotation, need to recalculate positions
-- Use `width()` and `height()` to get current screen dimensions
+**Q: My content is in the wrong place after rotating.**
+- The coordinate system changes when you rotate, so recalculate positions.
+- Read `width()` and `height()` *after* calling `setRotation()`.
 
-**Q: How to keep content centered?**
-- Use `width()` and `height()` to dynamically calculate center position
-- Don't use fixed coordinate values
+**Q: How do I keep something centered no matter the rotation?**
+- Use `width()` and `height()` to compute the center every time, instead of hard-coded
+  numbers.
 
-**Q: Does rotation affect performance?**
-- Rotation itself doesn't affect performance
-- But may need to redraw all content after rotation
+**Q: Does rotating slow things down?**
+- Rotating itself is cheap. What costs time is redrawing everything afterward.
 
 ## Next Step
 
-After completing this lesson, you can continue with:
-- [Lesson 07: System Info Display](../Lesson07_SystemInfo/README.md) - Learn to create system information display interface
+You've covered all the building blocks! The next lessons combine them into real interfaces.
+- [Lesson 07: System Info Display](../Lesson07_SystemInfo/README.md) — build your first full screen.
