@@ -29,6 +29,28 @@ also run on a **classic ESP32**. You do not need to change the code — just pic
 - One of the TFT-LCD display modules above.
 - A few jumper wires (or the included ribbon FPC cable + breakout board).
 
+## Required software versions
+
+Most compile failures come from a version mismatch, so please install these:
+
+| Component                         | Required version          | Tested with | Where to get it                            |
+| --------------------------------- | ------------------------- | ----------- | ------------------------------------------ |
+| **Arduino IDE**                   | 2.x (latest)              | 2.x         | [arduino.cc/en/software](https://www.arduino.cc/en/software) |
+| **ESP32 board package** (Espressif) | **3.0.0 or newer**        | **3.3.10**  | Tools → Board → Boards Manager → `esp32`   |
+| **GFX Library for Arduino** (Moon On Our Nation) | **1.5.0 or newer** | **1.6.6**   | Tools → Manage Libraries → `GFX Library for Arduino` |
+
+> The exact versions in the **Tested with** column are the ones these sketches were last verified
+> against. Newer versions are expected to work too; the **Required version** column is the minimum.
+
+> ⚠️ **The ESP32 board package must be 3.0.0 or newer.** Recent versions of the GFX library
+> include the header `esp32-hal-periman.h`, which only exists in **ESP32 core 3.0.0+**. If you
+> compile with an older core (e.g. 2.0.17), you get:
+> ```
+> fatal error: esp32-hal-periman.h: No such file or directory
+> ```
+> The fix is to update the ESP32 board package to 3.0.0 or newer (see step 2 below), **not** to
+> change any code.
+
 ## How to wire it up
 
 Connect the 8 pins on the display to your ESP32. **Which GPIO numbers to use depends on
@@ -61,11 +83,12 @@ want to use different pins, change the `#define TFT_*` lines near the top of the
 2. **Add ESP32 board support.**
   - Open **Tools → Board → Boards Manager**.
   - Search for `esp32` (by Espressif Systems) and click **Install**.
-  - The latest version is fine.
+  - Install **version 3.0.0 or newer** (the latest is recommended). Versions older than 3.0.0
+  will fail to compile with `esp32-hal-periman.h: No such file or directory`.
 3. **Install the display library.**
   - Open **Tools → Manage Libraries**.
   - Search for `GFX Library for Arduino` (by Moon On Our Nation) and click **Install**.
-  - The latest version is fine.
+  - Install **version 1.5.0 or newer** (the latest is recommended).
 4. **Open an example.**
   - Open the `.ino` file for your display size, e.g. `2.4inch/code/2.4inch_Test/2.4inch_Test.ino`.
 5. **Select your board** under **Tools → Board → ESP32 Arduino**:
@@ -74,8 +97,8 @@ want to use different pins, change the `#define TFT_*` lines near the top of the
 6. **Select the port** under **Tools → Port** (plug in your board first).
 7. **Click Upload** (the → arrow). The display should light up and show a test image.
 
-> **Tip:** These examples were tested with the **latest** ESP32 core and GFX library, and also
-> work with the older ESP32 core 2.0.17 + GFX 1.6.4. You can use whichever versions you have.
+> **Tip:** These examples were last tested with **ESP32 core 3.3.10** and **GFX Library 1.6.6**.
+> The ESP32 core must be **3.0.0 or newer** — see [Required software versions](#required-software-versions) above.
 
 ## Where to go next
 
@@ -107,6 +130,9 @@ exact display size.
 
 - Re-check that the ESP32 board package and the GFX library both installed correctly.
 - Make sure the correct board is selected under **Tools → Board**.
+- **`fatal error: esp32-hal-periman.h: No such file or directory`** — your ESP32 board package
+is older than 3.0.0. Open **Tools → Board → Boards Manager**, find `esp32` by Espressif, and
+update it to **3.0.0 or newer**. See [Required software versions](#required-software-versions).
 
 ## Project structure
 

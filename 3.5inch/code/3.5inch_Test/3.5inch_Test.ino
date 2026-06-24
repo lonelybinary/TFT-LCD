@@ -87,7 +87,7 @@ void displayLonelyBinary() {
   
   // Top section: Center display "LonelyBinary" (adapt to screen size, ensure it doesn't exceed)
   gfx->setTextColor(WHITE);
-  gfx->setTextSize(3);  // 320px width, size=4 would exceed, changed to size=3
+  gfx->setTextSize(2);  // 320px wide: size 2 keeps "LonelyBinary" fully on screen
   int textWidth = strlen("LonelyBinary") * 3 * 6;  // Estimate text width: 12*3*6=216px
   int textX = (gfx->width() - textWidth) / 2;
   int textY = gfx->height() / 4 - 6;  // Top section middle
