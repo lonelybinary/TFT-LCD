@@ -48,6 +48,7 @@
   #define TFT_SCLK  12   // SCL/SCLK (SPI clock)
   #define TFT_BACKLIGHT 41  // LEDA/BLK (Backlight)
   #define TFT_USE_PSRAM true
+  #define TFT_SPI_NUM   HSPI    // S3: SPI3 host (=1). Usable buses are FSPI(=0) and HSPI(=1).
 #else
   // Classic ESP32 (e.g. Lonely Binary PinPulse, select "ESP32 Dev Module")
   // NOTE: GPIO 41/42 do not exist on classic ESP32, and GPIO 6-11 are reserved for
@@ -60,13 +61,14 @@
   #define TFT_SCLK  18   // SCL/SCLK (SPI clock, VSPI default)
   #define TFT_BACKLIGHT 32  // LEDA/BLK (Backlight)
   #define TFT_USE_PSRAM false
+  #define TFT_SPI_NUM   VSPI    // classic ESP32: SPI3 host (=3). NOT FSPI(=1) -- that is the on-chip flash bus.
 #endif
 
 // ==================== Create the display object ====================
 // "bus" sets up HOW we talk to the screen (hardware SPI on the pins above).
 // "gfx" is the ST7796 screen driver (320x480) we call to draw text and shapes.
 // Using a different screen size? See ADAPTATION_GUIDE.md in that size's folder.
-Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, TFT_SCLK, TFT_MOSI, GFX_NOT_DEFINED, 1, TFT_USE_PSRAM /* use_psram (auto: PSRAM on S3, off on classic ESP32) */);
+Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, TFT_SCLK, TFT_MOSI, GFX_NOT_DEFINED, TFT_SPI_NUM /* HSPI on S3, VSPI on classic ESP32 */, true /* is_shared_interface */);
 Arduino_ST7796 *gfx = new Arduino_ST7796(bus, TFT_RST, 0, true /* IPS */, 320, 480, 0, 0, 0, 0);
 
 // ==================== Helper Functions ====================

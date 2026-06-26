@@ -49,6 +49,7 @@
   #define TFT_SCLK  12   // SCL/SCLK (SPI clock)
   #define TFT_BACKLIGHT 41  // LEDA/BLK (Backlight)
   #define TFT_USE_PSRAM true
+  #define TFT_SPI_NUM   HSPI    // S3: SPI3 host (=1). Usable buses are FSPI(=0) and HSPI(=1).
 #else
   // Classic ESP32 (e.g. Lonely Binary PinPulse, select "ESP32 Dev Module")
   // NOTE: GPIO 41/42 do not exist on classic ESP32, and GPIO 6-11 are reserved for
@@ -61,6 +62,7 @@
   #define TFT_SCLK  18   // SCL/SCLK (SPI clock, VSPI default)
   #define TFT_BACKLIGHT 32  // LEDA/BLK (Backlight)
   #define TFT_USE_PSRAM false
+  #define TFT_SPI_NUM   VSPI    // classic ESP32: SPI3 host (=3). NOT FSPI(=1) -- that is the on-chip flash bus.
 #endif
 // Wiring quick-reference (which GPIO to use depends on your board).
 // The #if block above picks these for you automatically based on the board
@@ -80,7 +82,7 @@
 // Two steps. First, "bus" describes HOW we talk to the screen: hardware SPI
 // using the DC, CS, SCLK and MOSI pins defined above (MISO is unused here).
 // Then "gfx" is the actual ST7789 screen driver (240x320) we call to draw.
-Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, TFT_SCLK, TFT_MOSI, GFX_NOT_DEFINED /* MISO (not used) */, 1 /* VSPI */, TFT_USE_PSRAM /* use_psram (auto: PSRAM on S3, off on classic ESP32) */);
+Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, TFT_SCLK, TFT_MOSI, GFX_NOT_DEFINED /* MISO (not used) */, TFT_SPI_NUM /* HSPI on S3, VSPI on classic ESP32 */, true /* is_shared_interface */);
 Arduino_ST7789 *gfx = new Arduino_ST7789(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 240 /* width */, 320 /* height */, 0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 0 /* row offset 2 */);
 
 // ==================== Display LonelyBinary and Color Bars ====================
