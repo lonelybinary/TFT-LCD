@@ -116,6 +116,17 @@ that shows how to adjust the 3.5-inch lesson code for your screen.
 - Make sure power is **3.3V**, not 5V.
 - Confirm you selected the matching board (ESP32S3 Dev Module vs ESP32 Dev Module).
 
+**Backlight lights up but the screen stays blank — only on classic ESP32**
+
+This is almost always the **wrong SPI bus number**. The ESP32 core numbers its SPI
+buses differently per chip: the value `1` means `HSPI` (a usable bus) on the **ESP32-S3**,
+but means `FSPI` — the bus wired to the on-chip program flash — on the **classic ESP32**.
+A sketch that hard-codes `1` for the bus therefore works on the S3 but produces a lit
+backlight with a black screen on the classic ESP32 (the backlight is just a GPIO, so it
+still turns on). The sketches in this repo fix this by selecting the bus with the named
+macro `TFT_SPI_NUM` (`HSPI` on the S3, `VSPI` on the classic ESP32) instead of a literal
+number — if you adapt your own code, do the same rather than passing `1`.
+
 **Upload fails / wrong port**
 
 - Pick the correct port under **Tools → Port**.
