@@ -105,8 +105,11 @@ spi = SPI(SPI_ID, baudrate=20000000, polarity=0, phase=0,
           sck=Pin(TFT_SCLK), mosi=Pin(TFT_MOSI), miso=None)
 
 print("Initializing LCD...")
+# flip_x + flip_y: this 1.8" panel scans bottom-up, so without the 180-degree
+# flip the picture appears upside-down.
 tft = st77xx.ST7735(spi, 128, 160,
-                    dc=Pin(TFT_DC), cs=Pin(TFT_CS), rst=Pin(TFT_RST))
+                    dc=Pin(TFT_DC), cs=Pin(TFT_CS), rst=Pin(TFT_RST),
+                    flip_x=True, flip_y=True)
 print("LCD initialization complete")
 
 # Display LonelyBinary and color bars (static display)

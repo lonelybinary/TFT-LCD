@@ -107,7 +107,8 @@ want to use different pins, change the `#define TFT_*` lines near the top of the
 [tutorials/3.5inch/](tutorials/3.5inch/README.md), starting with Hello World.
 - **Prefer Python?** Every size also has a **MicroPython** test script that runs on
 stock MicroPython firmware, on both ESP32-S3 and classic ESP32 — see
-[micropython/README.md](micropython/README.md).
+[micropython/README.md](micropython/README.md). There's a full MicroPython version of
+the 11 lessons too: [tutorials/micropython/](tutorials/micropython/README.md).
 - **Have a different size than 3.5 inch?** Each size folder has an `ADAPTATION_GUIDE.md`
 that shows how to adjust the 3.5-inch lesson code for your screen.
 
@@ -165,9 +166,12 @@ TFT-LCD/
 │   └── lib/
 │       └── st77xx.py           # MicroPython driver (ST7735S / ST7789 / ST7796)
 └── tutorials/
-    └── 3.5inch/                # 11 beginner lessons (Hello World → Clock)
+    ├── 3.5inch/                # 11 beginner lessons, Arduino (Hello World → Clock)
+    │   ├── Lesson01_HelloWorld/
+    │   ├── Lesson02_Colors/
+    │   └── ...
+    └── micropython/            # The same 11 lessons, in MicroPython
         ├── Lesson01_HelloWorld/
-        ├── Lesson02_Colors/
         └── ...
 ```
 

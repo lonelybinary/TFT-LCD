@@ -15,7 +15,7 @@ Pick the class that matches your display's driver IC:
 
     Size       Resolution  Class          Extras needed
     0.96 inch  80 x 160    ST7735         xstart=24, bgr=True, invert=False
-    1.8 inch   128 x 160   ST7735         (defaults)
+    1.8 inch   128 x 160   ST7735         flip_x=True, flip_y=True
     2.0 inch   240 x 320   ST7789         (defaults)
     2.4 inch   240 x 320   ST7789         (defaults)
     2.8 inch   240 x 320   ST7789         (defaults)
@@ -82,9 +82,13 @@ class ST77xx:
     # Per-controller extra init commands, filled in by subclasses:
     # a tuple of (command, data bytes, delay_ms) entries.
     _INIT = ()
+    # Per-controller MADCTL quirk, XORed into every rotation's value
+    # (the ST7796 scans mirrored, so its subclass sets MX here).
+    _MADCTL_XOR = 0x00
 
     def __init__(self, spi, width, height, dc, cs, rst=None,
-                 rotation=0, bgr=False, invert=True, xstart=0, ystart=0):
+                 rotation=0, bgr=False, invert=True, xstart=0, ystart=0,
+                 flip_x=False, flip_y=False):
         """
         spi      - a machine.SPI already configured (mode 0, MOSI + SCK only)
         width    - panel width in pixels at rotation 0 (portrait)
@@ -99,6 +103,9 @@ class ST77xx:
                    (symptom of a wrong value: image looks like a photo negative)
         xstart   - column offset of the visible area in controller RAM
         ystart   - row offset (small panels sit in the middle of the RAM)
+        flip_x   - True if the picture is mirrored left-right on your panel
+        flip_y   - True if the picture is mirrored top-bottom
+                   (set both for a panel that shows everything upside-down)
         """
         self.spi = spi
         self.dc = dc
@@ -115,6 +122,11 @@ class ST77xx:
         self._ys = ystart
         self.bgr = bgr
         self.invert = invert
+        self._madctl_xor = self._MADCTL_XOR
+        if flip_x:
+            self._madctl_xor ^= _MADCTL_MX
+        if flip_y:
+            self._madctl_xor ^= _MADCTL_MY
 
         # Reused chunk buffer for fills (1024 pixels = 2 KB) so big fills
         # don't allocate. _buf_color remembers what pattern is in it.
@@ -176,6 +188,7 @@ class ST77xx:
             _MADCTL_MX | _MADCTL_MY,
             _MADCTL_MV | _MADCTL_MY,
         )[r]
+        madctl ^= self._madctl_xor
         if self.bgr:
             madctl |= _MADCTL_BGR
         if r & 1:  # landscape: swap width/height and the RAM offsets
@@ -261,6 +274,87 @@ class ST77xx:
         self.hline(x, y + h - 1, w, color)
         self.vline(x, y, h, color)
         self.vline(x + w - 1, y, h, color)
+
+    def line(self, x0, y0, x1, y1, color):
+        """Line between two points (Bresenham)."""
+        if x0 == x1:
+            self.vline(x0, min(y0, y1), abs(y1 - y0) + 1, color)
+            return
+        if y0 == y1:
+            self.hline(min(x0, x1), y0, abs(x1 - x0) + 1, color)
+            return
+        dx = abs(x1 - x0)
+        sx = 1 if x0 < x1 else -1
+        dy = -abs(y1 - y0)
+        sy = 1 if y0 < y1 else -1
+        err = dx + dy
+        while True:
+            self.pixel(x0, y0, color)
+            if x0 == x1 and y0 == y1:
+                return
+            e2 = 2 * err
+            if e2 >= dy:
+                err += dy
+                x0 += sx
+            if e2 <= dx:
+                err += dx
+                y0 += sy
+
+    def circle(self, cx, cy, r, color):
+        """Circle outline (midpoint algorithm)."""
+        x, y, err = r, 0, 1 - r
+        while x >= y:
+            for px, py in ((cx + x, cy + y), (cx - x, cy + y),
+                           (cx + x, cy - y), (cx - x, cy - y),
+                           (cx + y, cy + x), (cx - y, cy + x),
+                           (cx + y, cy - x), (cx - y, cy - x)):
+                self.pixel(px, py, color)
+            y += 1
+            if err < 0:
+                err += 2 * y + 1
+            else:
+                x -= 1
+                err += 2 * (y - x) + 1
+
+    def fill_circle(self, cx, cy, r, color):
+        """Filled circle, drawn as one horizontal span per row."""
+        x, y, err = r, 0, 1 - r
+        while x >= y:
+            self.hline(cx - x, cy + y, 2 * x + 1, color)
+            self.hline(cx - x, cy - y, 2 * x + 1, color)
+            self.hline(cx - y, cy + x, 2 * y + 1, color)
+            self.hline(cx - y, cy - x, 2 * y + 1, color)
+            y += 1
+            if err < 0:
+                err += 2 * y + 1
+            else:
+                x -= 1
+                err += 2 * (y - x) + 1
+
+    def fill_triangle(self, x0, y0, x1, y1, x2, y2, color):
+        """Filled triangle, drawn as one horizontal span per row."""
+        # sort the three points by y
+        if y0 > y1:
+            x0, y0, x1, y1 = x1, y1, x0, y0
+        if y1 > y2:
+            x1, y1, x2, y2 = x2, y2, x1, y1
+        if y0 > y1:
+            x0, y0, x1, y1 = x1, y1, x0, y0
+        if y0 == y2:  # degenerate: all on one row
+            xs = min(x0, x1, x2)
+            self.hline(xs, y0, max(x0, x1, x2) - xs + 1, color)
+            return
+        for y in range(y0, y2 + 1):
+            # long edge (0 -> 2) intersection
+            xa = x0 + (x2 - x0) * (y - y0) // (y2 - y0)
+            # short edges (0 -> 1, then 1 -> 2)
+            if y < y1:
+                xb = x0 + (x1 - x0) * (y - y0) // (y1 - y0) if y1 != y0 else x1
+            else:
+                xb = x1 + (x2 - x1) * (y - y1) // (y2 - y1) if y2 != y1 else x1
+            if xa > xb:
+                xa, xb = xb, xa
+            self.hline(xa, y, xb - xa + 1, color)
 
     def blit(self, buf, x, y, w, h):
         """Push a w x h block of big-endian RGB565 pixels (bytes/bytearray)
@@ -353,6 +447,10 @@ class ST7796(ST77xx):
     """ST7796 - 3.5 inch (320x480) module.
     Uses the common ST7796 vendor settings (also found in Arduino_GFX and
     LovyanGFX), wrapped in the command-set unlock/lock the chip requires."""
+
+    # The ST7796 scans mirrored in X: without MX the picture (text) appears
+    # as a mirror image. This matches Arduino_GFX's rotation-0 value of 0x48.
+    _MADCTL_XOR = _MADCTL_MX
 
     _INIT = (
         (0xF0, b"\xc3", 0),                      # CSCON unlock part 1
