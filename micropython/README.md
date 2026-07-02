@@ -93,6 +93,10 @@ Press the board's **reset** button (or run `mpremote reset`). A file named
 show "LonelyBinary", eight color bars, and the screen info — the same test
 picture as the Arduino sketch.
 
+**Want to learn to build real interfaces next?** Work through the
+[11-lesson MicroPython tutorial](../tutorials/micropython/README.md) — the Python
+version of the Arduino lessons, from Hello World to a clock face.
+
 To experiment interactively instead, open a REPL (Thonny's shell, or
 `mpremote repl`) and try:
 
@@ -143,6 +147,11 @@ compiled driver frozen into custom firmware.
 
 **Red and blue are swapped**
 - Flip the `bgr=` argument where the display object is created in `main.py`.
+
+**Picture is upside-down, or text reads like a mirror image**
+- Panel batches differ in scan direction. Add or flip `flip_x=True` (left-right
+  mirror) and/or `flip_y=True` (top-bottom mirror) where the display object is
+  created — both together give a 180° rotation.
 
 **Colors look like a photo negative**
 - Flip the `invert=` argument where the display object is created.
