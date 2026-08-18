@@ -70,7 +70,7 @@
 // DC, CS, SCLK and MOSI pins defined above (MISO is unused here).
 // "gfx" is the ST7796 screen driver (320x480) we call to draw text and shapes.
 // Using a different screen size? See ADAPTATION_GUIDE.md in that size's folder
-// (e.g. 0.96inch/ADAPTATION_GUIDE.md, 1.8inch/ADAPTATION_GUIDE.md, ...).
+// (e.g. tft-lcd/0.96inch/ADAPTATION_GUIDE.md, tft-lcd/1.8inch/ADAPTATION_GUIDE.md, ...).
 Arduino_DataBus *bus = new Arduino_ESP32SPI(TFT_DC, TFT_CS, TFT_SCLK, TFT_MOSI, GFX_NOT_DEFINED /* MISO (not used) */, TFT_SPI_NUM /* HSPI on S3, VSPI on classic ESP32 */, true /* is_shared_interface */);
 Arduino_ST7796 *gfx = new Arduino_ST7796(bus, TFT_RST, 0 /* rotation */, true /* IPS */, 320 /* width */, 480 /* height */, 0 /* col offset 1 */, 0 /* row offset 1 */, 0 /* col offset 2 */, 0 /* row offset 2 */);
 
