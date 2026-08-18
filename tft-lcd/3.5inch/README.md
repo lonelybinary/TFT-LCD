@@ -1,6 +1,6 @@
 # 3.5 Inch TFT-LCD Display
 
-The biggest screen in the kit — a 3.5-inch IPS color display. This page covers the specs and wiring for this size. For full setup steps, see the [main README](../README.md). The beginner lessons are written for this size, so it's a great one to start with.
+The biggest screen in the kit — a 3.5-inch IPS color display. This page covers the specs and wiring for this size. For full setup steps, see the [TFT-LCD series README](../README.md). The beginner lessons are written for this size, so it's a great one to start with.
 
 ## Photos
 
@@ -58,7 +58,7 @@ This size ships with both the column and row offset at **0**, so the picture sho
 
 The test sketch shows the LonelyBinary name, eight color bars, and the screen details at the bottom — a quick way to confirm everything works.
 
-New here? The full step-by-step setup (installing the IDE, the ESP32 boards, and the display library) lives in the [main README](../README.md). Ready to write your own code? Work through the 11 beginner lessons in [`tutorials/3.5inch/`](../tutorials/3.5inch/README.md), starting with Hello World — they're written for exactly this screen.
+New here? The full step-by-step setup (installing the IDE, the ESP32 boards, and the display library) lives in the [TFT-LCD series README](../README.md). Ready to write your own code? Work through the 11 beginner lessons in [`tutorials/3.5inch/`](../../tutorials/3.5inch/README.md), starting with Hello World — they're written for exactly this screen.
 
 ## Library versions
 

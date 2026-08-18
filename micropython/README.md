@@ -7,8 +7,9 @@ runtime and picks the right pins automatically.
 
 Everything runs on the **stock MicroPython firmware** from micropython.org.
 No custom firmware build, no external libraries to hunt down — the display
-driver is a single file in this repo ([`lib/st77xx.py`](lib/st77xx.py)) that
-you copy to the board next to the example.
+driver is one or two small files in this repo ([`lib/st77xx.py`](lib/st77xx.py),
+plus [`lib/nv3007.py`](lib/nv3007.py) for the two NV3007 sizes) that you copy to
+the board next to the example.
 
 ## What's where
 
@@ -16,22 +17,50 @@ you copy to the board next to the example.
 micropython/
 ├── README.md            # This guide
 └── lib/
-    └── st77xx.py        # Driver for all three chips: ST7735S / ST7789 / ST7796
+    ├── st77xx.py        # Driver for ST7735S / ST7789 / ST7796 (all drawing code lives here)
+    └── nv3007.py        # NV3007 driver for the 1.68 / 2.79 inch - needs st77xx.py too
 {size}inch/code/micropython/
 └── main.py              # Ready-to-run test script for that display size
 ```
 
 | Size      | Resolution | Driver chip | Test script |
 | --------- | ---------- | ----------- | ----------- |
-| 0.96 inch | 80 × 160   | ST7735S     | [`0.96inch/code/micropython/main.py`](../0.96inch/code/micropython/main.py) |
-| 1.8 inch  | 128 × 160  | ST7735S     | [`1.8inch/code/micropython/main.py`](../1.8inch/code/micropython/main.py) |
-| 2.0 inch  | 240 × 320  | ST7789      | [`2.0inch/code/micropython/main.py`](../2.0inch/code/micropython/main.py) |
-| 2.4 inch  | 240 × 320  | ST7789      | [`2.4inch/code/micropython/main.py`](../2.4inch/code/micropython/main.py) |
-| 2.8 inch  | 240 × 320  | ST7789      | [`2.8inch/code/micropython/main.py`](../2.8inch/code/micropython/main.py) |
-| 3.5 inch  | 320 × 480  | ST7796      | [`3.5inch/code/micropython/main.py`](../3.5inch/code/micropython/main.py) |
+| 0.96 inch | 80 × 160   | ST7735S     | [`tft-lcd/0.96inch/code/micropython/main.py`](../tft-lcd/0.96inch/code/micropython/main.py) |
+| 1.8 inch  | 128 × 160  | ST7735S     | [`tft-lcd/1.8inch/code/micropython/main.py`](../tft-lcd/1.8inch/code/micropython/main.py) |
+| 2.0 inch  | 240 × 320  | ST7789      | [`tft-lcd/2.0inch/code/micropython/main.py`](../tft-lcd/2.0inch/code/micropython/main.py) |
+| 2.4 inch  | 240 × 320  | ST7789      | [`tft-lcd/2.4inch/code/micropython/main.py`](../tft-lcd/2.4inch/code/micropython/main.py) |
+| 2.8 inch  | 240 × 320  | ST7789      | [`tft-lcd/2.8inch/code/micropython/main.py`](../tft-lcd/2.8inch/code/micropython/main.py) |
+| 3.5 inch  | 320 × 480  | ST7796      | [`tft-lcd/3.5inch/code/micropython/main.py`](../tft-lcd/3.5inch/code/micropython/main.py) |
+
+### Narrow TFT LCD Collection
+
+These run in **landscape** (`rotation=1`) and their backlight is **active low** (`LOW` = on).
+The scripts already handle both.
+
+| Size      | Resolution | Driver chip | Test script |
+| --------- | ---------- | ----------- | ----------- |
+| 1.14 inch | 135 × 240  | ST7789      | [`narrow-lcd/1.14inch/code/micropython/main.py`](../narrow-lcd/1.14inch/code/micropython/main.py) |
+| 1.68 inch | 142 × 428  | NV3007      | [`narrow-lcd/1.68inch/code/micropython/main.py`](../narrow-lcd/1.68inch/code/micropython/main.py) |
+| 1.9 inch  | 170 × 320  | ST7789      | [`narrow-lcd/1.9inch/code/micropython/main.py`](../narrow-lcd/1.9inch/code/micropython/main.py) |
+| 2.25 inch | 76 × 284   | ST7789P3    | [`narrow-lcd/2.25inch/code/micropython/main.py`](../narrow-lcd/2.25inch/code/micropython/main.py) |
+| 2.79 inch | 142 × 428  | NV3007      | [`narrow-lcd/2.79inch/code/micropython/main.py`](../narrow-lcd/2.79inch/code/micropython/main.py) |
+
+> **The two NV3007 panels (1.68 and 2.79 inch) need a second driver file.** The NV3007 is
+> a different controller with its own (much longer) initialisation sequence, so it lives in
+> [`micropython/lib/nv3007.py`](lib/nv3007.py). That file borrows all the drawing code from
+> `st77xx.py`, so for these two sizes copy **both** driver files to the board:
+>
+> ```bash
+> mpremote cp micropython/lib/st77xx.py :
+> mpremote cp micropython/lib/nv3007.py :
+> ```
+>
+> Each size has its own class (`NV3007_168`, `NV3007_279`) carrying that panel's vendor
+> voltage/gamma table — same values as the Arduino_GFX driver the Arduino sketches use.
 
 Wiring is identical to the Arduino examples — see the table in the
-[main README](../README.md#how-to-wire-it-up). You don't edit any code to
+[TFT-LCD series README](../tft-lcd/README.md#how-to-wire-it-up) or the
+[Narrow LCD series README](../narrow-lcd/README.md#how-to-wire-it-up). You don't edit any code to
 switch boards: the script checks which chip it is running on.
 
 ## Step 1 — Flash MicroPython (once per board)
@@ -66,16 +95,18 @@ You need **MicroPython v1.20 or newer**. Two ways to install it:
 
 > Some boards need the **BOOT** button held down while flashing starts.
 
-## Step 2 — Copy two files to the board
+## Step 2 — Copy the files to the board
 
-Copy the driver plus the `main.py` for **your display size**. Two ways:
+Copy the driver(s) plus the `main.py` for **your display size**. The drivers are in
+`micropython/lib/` at the root of this repository, **not** in the size folders; each size's
+`code/micropython/README.md` lists exactly which files it needs. Two ways:
 
 **Easy way (Thonny):**
 
 1. Open **View → Files**. The top pane is your computer, the bottom pane is
    the board.
 2. Upload `micropython/lib/st77xx.py` to the board (right-click → *Upload to /*).
-3. Upload the `main.py` for your size, e.g. `2.4inch/code/micropython/main.py`.
+3. Upload the `main.py` for your size, e.g. `tft-lcd/2.4inch/code/micropython/main.py`.
 
 **Command-line way (mpremote):**
 
@@ -83,7 +114,7 @@ Copy the driver plus the `main.py` for **your display size**. Two ways:
 pip install mpremote
 # from the root of this repo (2.4 inch shown - use your size's folder):
 mpremote cp micropython/lib/st77xx.py :
-mpremote cp 2.4inch/code/micropython/main.py :
+mpremote cp tft-lcd/2.4inch/code/micropython/main.py :
 ```
 
 ## Step 3 — Run it
@@ -110,8 +141,8 @@ tft.fill_rect(10, 40, 100, 30, st77xx.YELLOW)
 
 ## Driver quick reference
 
-`st77xx.py` exposes three classes — `ST7735`, `ST7789`, `ST7796` — that share
-the same API:
+`st77xx.py` exposes three classes — `ST7735`, `ST7789`, `ST7796` — and
+`nv3007.py` adds `NV3007_168` and `NV3007_279`; all share the same API:
 
 | Call | What it does |
 | ---- | ------------ |
@@ -142,6 +173,13 @@ compiled driver frozen into custom firmware.
 - Double-check every wire, especially **DC** and **RST** — a wrong DC pin is
   the most common cause.
 - Make sure power is **3.3V**, not 5V.
+- **CS must be wired to the CS GPIO, not jumpered to GND.** With CS tied low
+  the display never sees a CS edge, which is the only thing (short of a hard
+  reset) that lets it re-sync its SPI byte framing — one stray clock pulse at
+  boot then leaves every command misaligned and the panel stays black with the
+  backlight on. The Arduino sketches may happen to work with CS grounded;
+  MicroPython does not. Remove the CS-to-GND jumper and run CS to the pin in
+  the wiring table.
 - On the **0.96-inch** module the backlight is **active-low** (the script
   already handles this — but if you adapted the code, drive BLK LOW, not HIGH).
 

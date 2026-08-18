@@ -205,7 +205,7 @@ or adapting the lessons to a different display size (each size folder has an
 
 ## Helpful links
 
-- [3.5-inch display README](../../3.5inch/README.md)
+- [3.5-inch display README](../../tft-lcd/3.5inch/README.md)
 - [Arduino GFX Library on GitHub](https://github.com/moononournation/Arduino_GFX)
 - [ESP32 Arduino documentation](https://docs.espressif.com/projects/arduino-esp32/)
 

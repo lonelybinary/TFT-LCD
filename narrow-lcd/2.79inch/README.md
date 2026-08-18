@@ -1,7 +1,7 @@
 # 2.79 Inch TFT-LCD Display (Narrow TFT LCD Collection)
 
 A 2.79-inch narrow color display for your ESP32 projects — the largest of the strips, same resolution as the 1.68 inch but physically bigger. This page covers the
-specs and wiring for this size. For full setup steps, see the [main README](../README.md).
+specs and wiring for this size. For full setup steps, see the [Narrow LCD series README](../README.md).
 
 ## The basics
 
@@ -96,8 +96,8 @@ it again):
    15-pin FPC connector, so you can swap displays without rewiring.
 
 New here? The full step-by-step setup (installing the IDE, the ESP32 boards, and the display
-library) lives in the [main README](../README.md). Ready to write your own code? Work through the
-beginner lessons in [`tutorials/3.5inch/`](../tutorials/3.5inch/README.md), and use this size's
+library) lives in the [Narrow LCD series README](../README.md). Ready to write your own code? Work through the
+beginner lessons in [`tutorials/3.5inch/`](../../tutorials/3.5inch/README.md), and use this size's
 `ADAPTATION_GUIDE.md` to adjust them for the 2.79-inch screen.
 
 ## Prefer Python?
@@ -106,7 +106,7 @@ There is a MicroPython version of the same test in `code/micropython/main.py`. I
 stock MicroPython firmware. This panel is an **NV3007**, so it uses the `nv3007.py` driver on
 top of the shared `st77xx.py` — copy both files from `micropython/lib/` to the board, then
 the script. The `NV3007_279` class carries this size's own init table.
-See [micropython/README.md](../micropython/README.md) for the setup steps.
+See [micropython/README.md](../../micropython/README.md) for the setup steps.
 
 ## Library versions
 

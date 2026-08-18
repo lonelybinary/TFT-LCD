@@ -15,8 +15,11 @@ Pick the class that matches your display's driver IC:
 
     Size       Resolution  Class          Extras needed
     0.96 inch  80 x 160    ST7735         xstart=24, bgr=True, invert=False
+    1.14 inch  135 x 240   ST7789         rotation=1, xstart=53, ystart=40
     1.8 inch   128 x 160   ST7735         flip_x=True, flip_y=True
+    1.9 inch   170 x 320   ST7789         rotation=1, xstart=35
     2.0 inch   240 x 320   ST7789         (defaults)
+    2.25 inch  76 x 284    ST7789         rotation=1, xstart=82, ystart=18, invert=False
     2.4 inch   240 x 320   ST7789         (defaults)
     2.8 inch   240 x 320   ST7789         (defaults)
     3.5 inch   320 x 480   ST7796         bgr=True
@@ -437,10 +440,28 @@ class ST7735(ST77xx):
 
 
 class ST7789(ST77xx):
-    """ST7789 - 2.0 / 2.4 / 2.8 inch (240x320) modules.
-    Works with its power-on defaults; no extra init needed."""
+    """ST7789 - 1.14 / 1.9 / 2.0 / 2.25 / 2.4 / 2.8 inch modules.
+    Init values are the ST7789V vendor settings (porch, gate, VCOM, power,
+    gamma) that Arduino_GFX sends as its default ST7789 init. The 240x320
+    panels happen to work on power-on defaults alone, but the narrow 1.14
+    inch stays black without these."""
 
-    _INIT = ()
+    _INIT = (
+        (0xB0, b"\x00\xf0", 0),                  # RAMCTRL
+        (0xB2, b"\x0c\x0c\x00\x33\x33", 0),      # PORCTRL porch setting
+        (0xB7, b"\x35", 0),                      # GCTRL gate control
+        (0xBB, b"\x19", 0),                      # VCOMS
+        (0xC0, b"\x2c", 0),                      # LCMCTRL
+        (0xC2, b"\x01", 0),                      # VDVVRHEN
+        (0xC3, b"\x12", 0),                      # VRHS
+        (0xC4, b"\x20", 0),                      # VDVS
+        (0xC6, b"\x0f", 0),                      # FRCTRL2 frame rate 60 Hz
+        (0xD0, b"\xa4\xa1", 0),                  # PWCTRL1
+        (0xE0, b"\xf0\x09\x13\x12\x12\x2b\x3c"
+               b"\x44\x4b\x1b\x18\x17\x1d\x21", 0),      # PVGAMCTRL gamma +
+        (0xE1, b"\xf0\x09\x13\x0c\x0d\x27\x3b"
+               b"\x44\x4d\x0b\x17\x17\x1d\x21", 0),      # NVGAMCTRL gamma -
+    )
 
 
 class ST7796(ST77xx):

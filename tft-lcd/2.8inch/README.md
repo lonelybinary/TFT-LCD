@@ -1,6 +1,6 @@
 # 2.8 Inch TFT-LCD Display
 
-A 2.8-inch IPS color display for your ESP32 projects. This page covers the specs and wiring for this size. For full setup steps, see the [main README](../README.md).
+A 2.8-inch IPS color display for your ESP32 projects. This page covers the specs and wiring for this size. For full setup steps, see the [TFT-LCD series README](../README.md).
 
 ## Photos
 
@@ -54,7 +54,7 @@ This size ships with both the column and row offset at **0**, so the picture sho
 
 The test sketch shows the LonelyBinary name, eight color bars, and the screen details at the bottom — a quick way to confirm everything works.
 
-New here? The full step-by-step setup (installing the IDE, the ESP32 boards, and the display library) lives in the [main README](../README.md). Ready to write your own code? Work through the beginner lessons in [`tutorials/3.5inch/`](../tutorials/3.5inch/README.md), and use this size's `ADAPTATION_GUIDE.md` to adjust them for the 2.8-inch screen.
+New here? The full step-by-step setup (installing the IDE, the ESP32 boards, and the display library) lives in the [TFT-LCD series README](../README.md). Ready to write your own code? Work through the beginner lessons in [`tutorials/3.5inch/`](../../tutorials/3.5inch/README.md), and use this size's `ADAPTATION_GUIDE.md` to adjust them for the 2.8-inch screen.
 
 ## Library versions
 

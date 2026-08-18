@@ -11,13 +11,27 @@ Driver IC:  NV3007
 Runs UNMODIFIED on both a classic ESP32 and an ESP32-S3 - the right pin set
 is picked automatically at runtime from the chip the script runs on.
 
+WHERE IS THE DRIVER? This script needs `st77xx.py` and `nv3007.py` on the board.
+They are NOT in this folder - the driver lives once, for all sizes, at the
+ROOT of this repository:
+     TFT-LCD/micropython/lib/st77xx.py
+     TFT-LCD/micropython/lib/nv3007.py
+(i.e. from this folder: ../../../../micropython/lib/). Read the README.md
+next to this file for the full picture.
+
+Files to put in the board's root filesystem:
+     st77xx.py   - the display driver (all drawing code)
+     nv3007.py   - the NV3007 init on top of st77xx.py (needed for this size)
+     main.py     - this file
+
 Setup (full steps in micropython/README.md at the repo root):
 1. Flash stock MicroPython firmware (v1.20 or newer) from micropython.org
-2. Copy BOTH drivers and this script onto the board (nv3007.py needs
-   st77xx.py - it borrows all the drawing code from it):
+2. Copy the drivers and this script onto the board:
+     Thonny:   View -> Files, right-click each file -> "Upload to /"
+     mpremote (from the root of this repository):
      mpremote cp micropython/lib/st77xx.py :
      mpremote cp micropython/lib/nv3007.py :
-     mpremote cp 1.68inch/code/micropython/main.py :
+     mpremote cp narrow-lcd/1.68inch/code/micropython/main.py :
 3. Press reset - a file named main.py runs automatically at boot.
 """
 

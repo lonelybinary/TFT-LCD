@@ -190,6 +190,6 @@ int textY = (gfx->height() - 8 * textSize) / 2;
 
 ## Reference Resources
 
-- [Main README](../README.md) — full setup steps
+- [Narrow LCD series README](../README.md) — full setup steps
 - [This size's README](README.md) — specs and wiring
-- [3.5-inch tutorials](../tutorials/3.5inch/README.md) — the lessons being adapted
+- [3.5-inch tutorials](../../tutorials/3.5inch/README.md) — the lessons being adapted

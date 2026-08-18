@@ -11,11 +11,24 @@ Driver IC:  ST7789
 Runs UNMODIFIED on both a classic ESP32 and an ESP32-S3 - the right pin set
 is picked automatically at runtime from the chip the script runs on.
 
+WHERE IS THE DRIVER? This script needs `st77xx.py` on the board.
+It is NOT in this folder - the driver lives once, for all sizes, at the
+ROOT of this repository:
+     TFT-LCD/micropython/lib/st77xx.py
+(i.e. from this folder: ../../../../micropython/lib/). Read the README.md
+next to this file for the full picture.
+
+Files to put in the board's root filesystem:
+     st77xx.py   - the display driver (all drawing code)
+     main.py     - this file
+
 Setup (full steps in micropython/README.md at the repo root):
 1. Flash stock MicroPython firmware (v1.20 or newer) from micropython.org
 2. Copy the driver and this script onto the board:
+     Thonny:   View -> Files, right-click each file -> "Upload to /"
+     mpremote (from the root of this repository):
      mpremote cp micropython/lib/st77xx.py :
-     mpremote cp 2.8inch/code/micropython/main.py :
+     mpremote cp tft-lcd/2.8inch/code/micropython/main.py :
 3. Press reset - a file named main.py runs automatically at boot.
 """
 

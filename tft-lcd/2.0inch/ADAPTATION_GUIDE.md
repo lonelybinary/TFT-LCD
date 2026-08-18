@@ -241,7 +241,7 @@ int y = convertY(200); // 3.5-inch's 200 → 2.0-inch's 133
 **A**: 
 - 2.0-inch usually doesn't need offset
 - If display position is incorrect, check if coordinate conversion is correct
-- Reference test program: `2.0inch/code/2.0inch_Test/2.0inch_Test.ino`
+- Reference test program: `tft-lcd/2.0inch/code/2.0inch_Test/2.0inch_Test.ino`
 
 ### Q4: How to adapt UI interface?
 **A**: 
@@ -307,8 +307,8 @@ drawLabel("ONLINE", 113, 63, GREEN, BLACK, 2);   // 150×0.75=112.5≈113, 95×0
 
 ## Reference Resources
 
-- **Test Program**: `2.0inch/code/2.0inch_Test/2.0inch_Test.ino`
-- **Display README**: `2.0inch/README.md`
+- **Test Program**: `tft-lcd/2.0inch/code/2.0inch_Test/2.0inch_Test.ino`
+- **Display README**: `tft-lcd/2.0inch/README.md`
 - **3.5-inch Tutorial**: `tutorials/3.5inch/`
 
 ## Quick Checklist

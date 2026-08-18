@@ -212,7 +212,7 @@ gfx->drawRect(20, 33, 80, 50, RED);
 ### 2. BGR Color Conversion
 - Some 1.8-inch ST7735S displays may require BGR color conversion
 - If colors display incorrectly (e.g., red displays as blue), try using BGR conversion
-- Reference test program: `1.8inch/code/1.8inch_Test/1.8inch_Test.ino`
+- Reference test program: `tft-lcd/1.8inch/code/1.8inch_Test/1.8inch_Test.ino`
 
 ### 3. Display Size Limitations
 - Width 128 pixels, Height 160 pixels
@@ -246,7 +246,7 @@ int y = (160 - 8) / 2;  // 8 is text height for size 1
 **A**: 
 - If red displays as blue, green displays as magenta, BGR conversion is needed
 - Test method: Display red, if it displays as blue, conversion is needed
-- Reference test program: `1.8inch/code/1.8inch_Test/1.8inch_Test.ino`
+- Reference test program: `tft-lcd/1.8inch/code/1.8inch_Test/1.8inch_Test.ino`
 
 ### Q3: What happens if IPS parameter is set to false?
 **A**: 
@@ -330,8 +330,8 @@ gfx->fillRect(8, 66, 56, 13, GREEN);      // 50% = 112×0.5=56
 
 ## Reference Resources
 
-- **Test Program**: `1.8inch/code/1.8inch_Test/1.8inch_Test.ino`
-- **Display README**: `1.8inch/README.md`
+- **Test Program**: `tft-lcd/1.8inch/code/1.8inch_Test/1.8inch_Test.ino`
+- **Display README**: `tft-lcd/1.8inch/README.md`
 - **3.5-inch Tutorial**: `tutorials/3.5inch/`
 
 ## Quick Checklist

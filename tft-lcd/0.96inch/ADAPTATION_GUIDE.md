@@ -253,7 +253,7 @@ int y = convertY(200); // 3.5-inch's 200 → 0.96-inch's 66
 
 ### Q5: How to determine if offset is correct?
 **A**: 
-- Reference test program: `0.96inch/code/0.96inch_Test/0.96inch_Test.ino`
+- Reference test program: `tft-lcd/0.96inch/code/0.96inch_Test/0.96inch_Test.ino`
 - If display position is incorrect, fine-tune offset parameters
 - Column offset is usually between 20-28
 
@@ -293,8 +293,8 @@ gfx->fillRect(5, 66, 35, 13, GREEN);     // 50% = 70×0.5=35
 
 ## Reference Resources
 
-- **Test Program**: `0.96inch/code/0.96inch_Test/0.96inch_Test.ino`
-- **Display README**: `0.96inch/README.md`
+- **Test Program**: `tft-lcd/0.96inch/code/0.96inch_Test/0.96inch_Test.ino`
+- **Display README**: `tft-lcd/0.96inch/README.md`
 - **3.5-inch Tutorial**: `tutorials/3.5inch/`
 
 ## Quick Checklist

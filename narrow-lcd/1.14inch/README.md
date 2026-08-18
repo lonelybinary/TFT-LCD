@@ -1,7 +1,7 @@
 # 1.14 Inch TFT-LCD Display (Narrow TFT LCD Collection)
 
 A 1.14-inch narrow color display for your ESP32 projects — the smallest screen in the collection. This page covers the
-specs and wiring for this size. For full setup steps, see the [main README](../README.md).
+specs and wiring for this size. For full setup steps, see the [Narrow LCD series README](../README.md).
 
 ## The basics
 
@@ -96,15 +96,15 @@ it again):
    15-pin FPC connector, so you can swap displays without rewiring.
 
 New here? The full step-by-step setup (installing the IDE, the ESP32 boards, and the display
-library) lives in the [main README](../README.md). Ready to write your own code? Work through the
-beginner lessons in [`tutorials/3.5inch/`](../tutorials/3.5inch/README.md), and use this size's
+library) lives in the [Narrow LCD series README](../README.md). Ready to write your own code? Work through the
+beginner lessons in [`tutorials/3.5inch/`](../../tutorials/3.5inch/README.md), and use this size's
 `ADAPTATION_GUIDE.md` to adjust them for the 1.14-inch screen.
 
 ## Prefer Python?
 
 There is a MicroPython version of the same test in `code/micropython/main.py`. It runs on
 stock MicroPython firmware using the shared `st77xx.py` driver — see
-[micropython/README.md](../micropython/README.md) for the setup steps.
+[micropython/README.md](../../micropython/README.md) for the setup steps.
 
 ## Library versions
 
